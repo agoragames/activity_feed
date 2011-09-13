@@ -17,6 +17,14 @@ or:
 Make sure your redis server is running! Redis configuration is outside the scope of this README, but 
 check out the Redis documentation, http://redis.io/documentation.
 
+## Configuration
+
+```ruby
+ActivityFeed.redis = Redis.new(:host => '127.0.0.1', :port => 6379)
+ActivityFeed.namespace = 'activity'
+ActivityFeed.key = 'feed'
+```
+
 ## Usage
 
 Make sure MongoMapper is configured correctly before `require 'activity_feed'`. 
