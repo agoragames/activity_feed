@@ -2,8 +2,8 @@ require 'leaderboard'
 
 module ActivityFeed
   class Feed
-    def initialize(mlg_id)
-      @feederboard = Leaderboard.new("mlg:feed_#{mlg_id}", Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
+    def initialize(user_id)
+      @feederboard = Leaderboard.new("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}", Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
     end
     
     def page(page)

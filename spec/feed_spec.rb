@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ActivityFeed::Feed do
   it 'should pull up the correct list of ActivityFeed:Items when calling #page' do
     1.upto(5) do |index|
-      Fabricate(ActivityFeed::Item, :mlg_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
+      Fabricate(ActivityFeed::Item, :user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
     end
     
     feed = ActivityFeed::Feed.new(1)
@@ -12,7 +12,7 @@ describe ActivityFeed::Feed do
   
   it 'should return the correct number for #total_items' do
     1.upto(3) do |index|
-      Fabricate(ActivityFeed::Item, :mlg_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
+      Fabricate(ActivityFeed::Item, :user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
     end
     
     feed = ActivityFeed::Feed.new(1)
@@ -21,7 +21,7 @@ describe ActivityFeed::Feed do
   
   it 'should return the correct number for #total_pages' do
     1.upto(Leaderboard::DEFAULT_PAGE_SIZE + 1) do |index|
-      Fabricate(ActivityFeed::Item, :mlg_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
+      Fabricate(ActivityFeed::Item, :user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
     end
     
     feed = ActivityFeed::Feed.new(1)

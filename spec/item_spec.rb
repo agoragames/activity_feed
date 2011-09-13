@@ -14,8 +14,8 @@ describe ActivityFeed::Item do
   it 'should add the feed item ID to redis' do
     item = Fabricate.build(ActivityFeed::Item)
           
-    ActivityFeed.redis.zcard("mlg:feed_#{item.mlg_id}").should be(0)
+    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(0)
     item.save
-    ActivityFeed.redis.zcard("mlg:feed_#{item.mlg_id}").should be(1)      
+    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
   end  
 end

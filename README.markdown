@@ -50,14 +50,14 @@ ruby-1.9.2-p290 :006 > require 'activity_feed'
  => true 
 ruby-1.9.2-p290 :007 > ActivityFeed.redis = $redis
  => #<Redis client v2.2.2 connected to redis://127.0.0.1:6379/0 (Redis v2.2.12)> 
-ruby-1.9.2-p290 :008 > item = ActivityFeed::Item.new(:mlg_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
- => #<ActivityFeed::Item _id: BSON::ObjectId('4e6fa45c12dac1de21000001'), mlg_id: 1, nickname: "David Czarnecki", text: "Text", type: "activity-type"> 
+ruby-1.9.2-p290 :008 > item = ActivityFeed::Item.new(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
+ => #<ActivityFeed::Item _id: BSON::ObjectId('4e6fa45c12dac1de21000001'), user_id: 1, nickname: "David Czarnecki", text: "Text", type: "activity-type"> 
 ruby-1.9.2-p290 :009 > item.save
  => true 
 ruby-1.9.2-p290 :010 > feed = ActivityFeed::Feed.new(1)
  => #<ActivityFeed::Feed:0x000001030f22c0 @feederboard=#<Leaderboard:0x000001030f20b8 @leaderboard_name="mlg:feed_1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://127.0.0.1:6379/0 (Redis v2.2.12)>>> 
 ruby-1.9.2-p290 :011 > feed.page(1)
- => [#<ActivityFeed::Item _id: BSON::ObjectId('4e6fa45c12dac1de21000001'), created_at: 2011-09-13 18:43:42 UTC, mlg_id: 1, nickname: "David Czarnecki", text: "Text", type: "activity-type", updated_at: 2011-09-13 18:43:42 UTC>] 
+ => [#<ActivityFeed::Item _id: BSON::ObjectId('4e6fa45c12dac1de21000001'), created_at: 2011-09-13 18:43:42 UTC, user_id: 1, nickname: "David Czarnecki", text: "Text", type: "activity-type", updated_at: 2011-09-13 18:43:42 UTC>] 
 ruby-1.9.2-p290 :012 > 
 ```
 
