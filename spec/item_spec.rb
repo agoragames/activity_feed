@@ -17,5 +17,14 @@ describe ActivityFeed::Item do
     ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(0)
     item.save
     ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
-  end  
+  end
+  
+  it 'should have default attributes for .title .url .icon and .sticky' do
+    item = Fabricate.build(ActivityFeed::Item)
+    
+    item.title.should eql('item title')
+    item.url.should eql('http://url')
+    item.icon.should eql('http://icon')
+    item.sticky.should be_false
+  end
 end

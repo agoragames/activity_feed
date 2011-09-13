@@ -7,7 +7,11 @@ module ActivityFeed
     key :user_id, Integer, :required => true, :numeric => true
     key :nickname, String
     key :type, String
+    key :title, String
     key :text, String
+    key :url, String
+    key :icon, String
+    key :sticky, Boolean
 
     timestamps!
 
