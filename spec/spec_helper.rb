@@ -1,7 +1,5 @@
 require 'rubygems'
 require 'rspec'
-require 'active_support/cache'
-require 'active_support/core_ext/module/aliasing'
 require 'redis'
 require 'mongo_mapper'
 require 'database_cleaner'
