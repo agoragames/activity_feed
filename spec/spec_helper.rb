@@ -26,10 +26,10 @@ RSpec.configure do |config|
     ActivityFeed.persistence = :memory_item
     DatabaseCleaner.start
     DatabaseCleaner.clean
-    $redis.flushdb
   end
 
   config.after(:each) do
     DatabaseCleaner.clean
+    $redis.flushdb
   end  
 end
