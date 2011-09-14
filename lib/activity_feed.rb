@@ -18,6 +18,9 @@ module ActivityFeed
     when :mongo_mapper_item
       require 'activity_feed/mongo_mapper_item'
       klazz = ActivityFeed::MongoMapperItem
+    when :active_record_item
+      require 'activity_feed/active_record_item'
+      klazz = ActivityFeed::ActiveRecordItem
     else
       require 'activity_feed/memory_item'
       klazz = ActivityFeed::MemoryItem
@@ -39,6 +42,8 @@ module ActivityFeed
       JSON.parse(item)
     when :mongo_mapper_item
       ActivityFeed::MongoMapperItem.find(item)
+    when :active_record_item
+      ActivityFeed::ActiveRecordItem.find(item)
     else
       item
     end

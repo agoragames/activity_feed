@@ -22,14 +22,18 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rspec')
   s.add_development_dependency('database_cleaner')
   s.add_development_dependency('fabrication')
-
+  
+  s.add_development_dependency('mongo_mapper')
+  s.add_development_dependency('mongo_ext')
+  s.add_development_dependency('bson_ext')
+  
+  s.add_development_dependency('activerecord')
+  s.add_development_dependency('sqlite3')
+   
   s.add_dependency('activesupport')
   s.add_dependency('i18n')
   
   s.add_dependency('json')
-  s.add_dependency('mongo_mapper')
-  s.add_dependency('mongo_ext')
-  s.add_dependency('bson_ext')
   s.add_dependency('redis')
   s.add_dependency('leaderboard')
 end

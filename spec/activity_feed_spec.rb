@@ -28,6 +28,17 @@ describe ActivityFeed do
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
       ActivityFeed::MongoMapperItem.count.should be(1)
     end
+
+    it 'should allow you to create a new item using :active_record_item' do
+      user_id = 1
+      ActivityFeed.persistence = :active_record_item
+      
+      ActivityFeed::ActiveRecordItem.count.should be(0)
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
+      ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
+      ActivityFeed::ActiveRecordItem.count.should be(1)
+    end
   end
   
   describe 'loading' do
@@ -43,6 +54,15 @@ describe ActivityFeed do
     it 'should allow you to load an item using :mongo_mapper_item' do
       user_id = 1
       ActivityFeed.persistence = :mongo_mapper_item
+      
+      item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      loaded_item = ActivityFeed.load_item(item.id)
+      loaded_item.should == item
+    end
+
+    it 'should allow you to load an item using :active_record_item' do
+      user_id = 1
+      ActivityFeed.persistence = :active_record_item
       
       item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       loaded_item = ActivityFeed.load_item(item.id)

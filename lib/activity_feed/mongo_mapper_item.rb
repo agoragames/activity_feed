@@ -2,7 +2,7 @@ require 'mongo_mapper'
 
 module ActivityFeed
   class MongoMapperItem
-    include MongoMapper::Document
+    include MongoMapper::Document    
 
     key :user_id, Integer, :required => true, :numeric => true
     key :nickname, String
