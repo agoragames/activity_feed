@@ -55,7 +55,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
-    ActivityFeed.persistence = :memory_item
+    ActivityFeed.persistence = :memory
     DatabaseCleaner.start
     DatabaseCleaner.clean
   end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ActivityFeed::Feed do
-  it 'should pull up the correct list of ActivityFeed:Items when calling #page using :memory_item' do    
+  it 'should pull up the correct list of ActivityFeed:Items when calling #page using :memory' do    
     1.upto(5) do |index|
       item = ActivityFeed.create_item(:user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
     end
@@ -10,8 +10,8 @@ describe ActivityFeed::Feed do
     feed.page(1).size.should be(5)
   end
 
-  it 'should pull up the correct list of ActivityFeed:Items when calling #page using :mongo_mapper_item' do    
-    ActivityFeed.persistence = :mongo_mapper_item
+  it 'should pull up the correct list of ActivityFeed:Items when calling #page using :mongo_mapper' do    
+    ActivityFeed.persistence = :mongo_mapper
     ActivityFeed::MongoMapperItem.count.should be(0)
     1.upto(5) do |index|
       item = ActivityFeed.create_item(:user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")

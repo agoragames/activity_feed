@@ -1,6 +1,6 @@
-# Activity Feed
+# ActivityFeed
 
-Activity feeds backed by MongoDB and Redis
+Activity feeds in Redis
 
 ## Compatibility
 
@@ -23,7 +23,7 @@ check out the Redis documentation, http://redis.io/documentation.
 ActivityFeed.redis = Redis.new(:host => '127.0.0.1', :port => 6379)
 ActivityFeed.namespace = 'activity'
 ActivityFeed.key = 'feed'
-ActivityFeed.persistence = :memory_item (or :active_record_item or _:mongo_mapper_item)
+ActivityFeed.persistence = :memory (or :active_record or _:mongo_mapper)
 ```
 
 ## Usage
@@ -65,7 +65,7 @@ ActivityFeed can also use ActiveRecord to persist the items to more durable stor
 keeping the IDs for the activity feed items in Redis. You can set this using:
 
 ```ruby
-ActivityFeed.persistence = :active_record_item
+ActivityFeed.persistence = :active_record
 ```
 
 Example:
@@ -109,8 +109,8 @@ ruby-1.9.2-p290 :029 > require 'activity_feed'
  => true 
 ruby-1.9.2-p290 :030 > ActivityFeed.redis = $redis
  => #<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)> 
-ruby-1.9.2-p290 :031 > ActivityFeed.persistence = :active_record_item
- => :active_record_item 
+ruby-1.9.2-p290 :031 > ActivityFeed.persistence = :active_record
+ => :active_record 
 ruby-1.9.2-p290 :032 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
  => #<ActivityFeed::ActiveRecordItem id: 1, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "Text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:22", updated_at: "2011-09-14 15:08:22"> 
 ruby-1.9.2-p290 :033 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'More text')
@@ -128,7 +128,7 @@ ActivityFeed can also use MongoMapper to persist the items to more durable stora
 keeping the IDs for the activity feed items in Redis. You can set this using:
 
 ```ruby
-ActivityFeed.persistence = :mongo_mapper_item
+ActivityFeed.persistence = :mongo_mapper
 ```
 
 Make sure MongoMapper is configured correctly before setting this option. 
@@ -154,8 +154,8 @@ ruby-1.9.2-p290 :006 > require 'activity_feed'
  => true 
 ruby-1.9.2-p290 :007 > ActivityFeed.redis = $redis
  => #<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)> 
-ruby-1.9.2-p290 :008 > ActivityFeed.persistence = :mongo_mapper_item
- => :mongo_mapper_item 
+ruby-1.9.2-p290 :008 > ActivityFeed.persistence = :mongo_mapper
+ => :mongo_mapper 
 ruby-1.9.2-p290 :009 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
  => #<ActivityFeed::MongoMapperItem _id: BSON::ObjectId('4e70dcc512dac1efa0000001'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "Text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1> 
 ruby-1.9.2-p290 :010 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'More text')

@@ -8,23 +8,23 @@ module ActivityFeed
   mattr_accessor :key
   mattr_accessor :persistence
     
-  def self.persistence=(type = :memory_item)
+  def self.persistence=(type = :memory)
     @@persistence_type = type
     
     case type
-    when :memory_item
+    when :memory
       require 'activity_feed/memory_item'
       klazz = ActivityFeed::MemoryItem      
-    when :mongo_mapper_item
+    when :mongo_mapper
       require 'activity_feed/mongo_mapper_item'
       klazz = ActivityFeed::MongoMapperItem
-    when :active_record_item
+    when :active_record
       require 'activity_feed/active_record_item'
       klazz = ActivityFeed::ActiveRecordItem
     else
       require 'activity_feed/memory_item'
       klazz = ActivityFeed::MemoryItem
-      @@persistence_type = :memory_item
+      @@persistence_type = :memory
     end
     
     @@persistence = klazz
@@ -38,11 +38,11 @@ module ActivityFeed
   
   def self.load_item(item)
     case @@persistence_type
-    when :memory_item
+    when :memory
       JSON.parse(item)
-    when :mongo_mapper_item
+    when :mongo_mapper
       ActivityFeed::MongoMapperItem.find(item)
-    when :active_record_item
+    when :active_record
       ActivityFeed::ActiveRecordItem.find(item)
     else
       item
@@ -51,5 +51,5 @@ module ActivityFeed
   
   self.namespace = 'activity'
   self.key = 'feed'
-  self.persistence = :memory_item
+  self.persistence = :memory
 end
