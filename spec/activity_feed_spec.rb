@@ -36,8 +36,8 @@ describe ActivityFeed do
       ActivityFeed.persistence = :memory_item
       
       item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
-      loaded_item = ActivityFeed.load_item(item)
-      loaded_item.should == item
+      loaded_item = ActivityFeed.load_item(item.to_json)
+      loaded_item.should == JSON.parse(item.to_json)
     end
     
     it 'should allow you to load an item using :mongo_mapper_item' do
@@ -46,7 +46,7 @@ describe ActivityFeed do
       
       item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       loaded_item = ActivityFeed.load_item(item.id)
-      loaded_item.should == item      
+      loaded_item.should == item
     end
   end
 end

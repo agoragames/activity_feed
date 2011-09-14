@@ -36,7 +36,7 @@ module ActivityFeed
   def self.load_item(item)
     case @@persistence_type
     when :memory_item
-      item
+      JSON.parse(item)
     when :mongo_mapper_item
       ActivityFeed::MongoMapperItem.find(item)
     else
