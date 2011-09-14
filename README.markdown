@@ -49,13 +49,13 @@ ruby-1.9.2-p290 :003 > require 'activity_feed'
 ruby-1.9.2-p290 :004 > ActivityFeed.redis = $redis
  => #<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)> 
 ruby-1.9.2-p290 :005 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
- => #<ActivityFeed::MemoryItem:0x00000102085ba8 @attributes={:user_id=>1, :nickname=>"David Czarnecki", :type=>"activity-type", :text=>"Text"}, @user_id=1, @nickname="David Czarnecki", @type="activity-type", @text="Text"> 
+ => #<ActivityFeed::MemoryItem:0x00000100ceaaa8 @attributes={:user_id=>1, :nickname=>"David Czarnecki", :type=>"activity-type", :text=>"Text"}, @user_id=1, @nickname="David Czarnecki", @type="activity-type", @text="Text"> 
 ruby-1.9.2-p290 :006 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'More text')
- => #<ActivityFeed::MemoryItem:0x0000010288bd20 @attributes={:user_id=>1, :nickname=>"David Czarnecki", :type=>"activity-type", :text=>"More text"}, @user_id=1, @nickname="David Czarnecki", @type="activity-type", @text="More text"> 
+ => #<ActivityFeed::MemoryItem:0x000001022b0c48 @attributes={:user_id=>1, :nickname=>"David Czarnecki", :type=>"activity-type", :text=>"More text"}, @user_id=1, @nickname="David Czarnecki", @type="activity-type", @text="More text"> 
 ruby-1.9.2-p290 :007 > feed = ActivityFeed::Feed.new(1)
- => #<ActivityFeed::Feed:0x0000010288de40 @feederboard=#<Leaderboard:0x0000010288dd50 @leaderboard_name="activity:feed:1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)>>> 
+ => #<ActivityFeed::Feed:0x00000103023b78 @feederboard=#<Leaderboard:0x00000103023a88 @leaderboard_name="activity:feed:1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)>>> 
 ruby-1.9.2-p290 :008 > feed.page(1)
- => ["{\"user_id\":1,\"nickname\":\"David Czarnecki\",\"type\":\"activity-type\",\"text\":\"More text\"}", "{\"user_id\":1,\"nickname\":\"David Czarnecki\",\"type\":\"activity-type\",\"text\":\"Text\"}"] 
+ => [{"user_id"=>1, "nickname"=>"David Czarnecki", "type"=>"activity-type", "text"=>"More text"}, {"user_id"=>1, "nickname"=>"David Czarnecki", "type"=>"activity-type", "text"=>"Text"}] 
 ruby-1.9.2-p290 :009 > 
 ```
 
