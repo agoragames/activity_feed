@@ -17,7 +17,7 @@ module ActivityFeed
 
     self.ensure_index(:user_id)
 
-    after_save :update_redis
+    after_create :update_redis
 
     private
 
