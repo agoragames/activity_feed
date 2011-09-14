@@ -1,7 +1,5 @@
 require 'rubygems'
 require 'rspec'
-require 'active_support/cache'
-require 'active_support/core_ext/module/aliasing'
 require 'redis'
 require 'mongo_mapper'
 require 'database_cleaner'
@@ -25,6 +23,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
+    ActivityFeed.persistence = :memory_item
     DatabaseCleaner.start
     DatabaseCleaner.clean
     $redis.flushdb

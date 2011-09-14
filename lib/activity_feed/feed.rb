@@ -9,7 +9,7 @@ module ActivityFeed
     def page(page)
       feed_items = []
       @feederboard.leaders(page).each do |feed_item|
-        feed_items << ActivityFeed::Item.find(feed_item[:member])    
+        feed_items << ActivityFeed.load_item(feed_item[:member])
       end
 
       feed_items
