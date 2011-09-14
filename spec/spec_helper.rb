@@ -41,7 +41,7 @@ end
 DatabaseCleaner[:active_record].strategy = :transaction
 DatabaseCleaner[:mongo_mapper].strategy = :truncation
 
-require File.join(File.dirname(__FILE__), %w{ .. lib activity_feed})
+require 'activity_feed'
 
 ActivityFeed.redis = $redis
 
