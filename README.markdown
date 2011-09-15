@@ -178,7 +178,7 @@ ActivityFeed.persistence = :custom
 This will try to load the following class:
 
 ```ruby
-ActivityFeed::Custom::Item""
+ActivityFeed::Custom::Item
 ```
 
 If you set persistence to be `:foo`, it would try to load the following class:
