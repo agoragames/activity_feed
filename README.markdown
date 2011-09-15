@@ -49,9 +49,9 @@ ruby-1.9.2-p290 :003 > require 'activity_feed'
 ruby-1.9.2-p290 :004 > ActivityFeed.redis = $redis
  => #<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)> 
 ruby-1.9.2-p290 :005 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
- => #<ActivityFeed::MemoryItem:0x00000100ceaaa8 @attributes={:user_id=>1, :nickname=>"David Czarnecki", :type=>"activity-type", :text=>"Text"}, @user_id=1, @nickname="David Czarnecki", @type="activity-type", @text="Text"> 
+ => #<ActivityFeed::Memory::Item:0x00000100ceaaa8 @attributes={:user_id=>1, :nickname=>"David Czarnecki", :type=>"activity-type", :text=>"Text"}, @user_id=1, @nickname="David Czarnecki", @type="activity-type", @text="Text"> 
 ruby-1.9.2-p290 :006 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'More text')
- => #<ActivityFeed::MemoryItem:0x000001022b0c48 @attributes={:user_id=>1, :nickname=>"David Czarnecki", :type=>"activity-type", :text=>"More text"}, @user_id=1, @nickname="David Czarnecki", @type="activity-type", @text="More text"> 
+ => #<ActivityFeed::Memory::Item:0x000001022b0c48 @attributes={:user_id=>1, :nickname=>"David Czarnecki", :type=>"activity-type", :text=>"More text"}, @user_id=1, @nickname="David Czarnecki", @type="activity-type", @text="More text"> 
 ruby-1.9.2-p290 :007 > feed = ActivityFeed::Feed.new(1)
  => #<ActivityFeed::Feed:0x00000103023b78 @feederboard=#<Leaderboard:0x00000103023a88 @leaderboard_name="activity:feed:1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)>>> 
 ruby-1.9.2-p290 :008 > feed.page(1)
@@ -112,13 +112,13 @@ ruby-1.9.2-p290 :030 > ActivityFeed.redis = $redis
 ruby-1.9.2-p290 :031 > ActivityFeed.persistence = :active_record
  => :active_record 
 ruby-1.9.2-p290 :032 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
- => #<ActivityFeed::ActiveRecordItem id: 1, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "Text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:22", updated_at: "2011-09-14 15:08:22"> 
+ => #<ActivityFeed::ActiveRecord::Item id: 1, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "Text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:22", updated_at: "2011-09-14 15:08:22"> 
 ruby-1.9.2-p290 :033 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'More text')
- => #<ActivityFeed::ActiveRecordItem id: 2, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "More text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:25", updated_at: "2011-09-14 15:08:25"> 
+ => #<ActivityFeed::ActiveRecord::Item id: 2, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "More text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:25", updated_at: "2011-09-14 15:08:25"> 
 ruby-1.9.2-p290 :034 > feed = ActivityFeed::Feed.new(1)
  => #<ActivityFeed::Feed:0x000001030f1898 @feederboard=#<Leaderboard:0x000001030f1578 @leaderboard_name="activity:feed:1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)>>> 
 ruby-1.9.2-p290 :035 > feed.page(1)
- => [#<ActivityFeed::ActiveRecordItem id: 2, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "More text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:25", updated_at: "2011-09-14 15:08:25">, #<ActivityFeed::ActiveRecordItem id: 1, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "Text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:22", updated_at: "2011-09-14 15:08:22">] 
+ => [#<ActivityFeed::ActiveRecord::Item id: 2, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "More text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:25", updated_at: "2011-09-14 15:08:25">, #<ActivityFeed::ActiveRecord::Item id: 1, user_id: 1, nickname: "David Czarnecki", type: nil, title: nil, text: "Text", url: nil, icon: nil, sticky: nil, created_at: "2011-09-14 15:08:22", updated_at: "2011-09-14 15:08:22">] 
 ruby-1.9.2-p290 :036 > 
 ```
 
@@ -157,13 +157,13 @@ ruby-1.9.2-p290 :007 > ActivityFeed.redis = $redis
 ruby-1.9.2-p290 :008 > ActivityFeed.persistence = :mongo_mapper
  => :mongo_mapper 
 ruby-1.9.2-p290 :009 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
- => #<ActivityFeed::MongoMapperItem _id: BSON::ObjectId('4e70dcc512dac1efa0000001'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "Text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1> 
+ => #<ActivityFeed::MongoMapper::Item _id: BSON::ObjectId('4e70dcc512dac1efa0000001'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "Text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1> 
 ruby-1.9.2-p290 :010 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'More text')
- => #<ActivityFeed::MongoMapperItem _id: BSON::ObjectId('4e70dcc512dac1efa0000003'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "More text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1> 
+ => #<ActivityFeed::MongoMapper::Item _id: BSON::ObjectId('4e70dcc512dac1efa0000003'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "More text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1> 
 ruby-1.9.2-p290 :011 > feed = ActivityFeed::Feed.new(1)
  => #<ActivityFeed::Feed:0x00000100c583d8 @feederboard=#<Leaderboard:0x00000100c58298 @leaderboard_name="activity:feed:1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.12)>>> 
 ruby-1.9.2-p290 :012 > feed.page(1)
- => [#<ActivityFeed::MongoMapperItem _id: BSON::ObjectId('4e70dcc512dac1efa0000003'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "More text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1>, #<ActivityFeed::MongoMapperItem _id: BSON::ObjectId('4e70dcc512dac1efa0000001'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "Text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1>] 
+ => [#<ActivityFeed::MongoMapper::Item _id: BSON::ObjectId('4e70dcc512dac1efa0000003'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "More text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1>, #<ActivityFeed::MongoMapper::Item _id: BSON::ObjectId('4e70dcc512dac1efa0000001'), created_at: 2011-09-14 16:56:37 UTC, nickname: "David Czarnecki", text: "Text", type: "activity-type", updated_at: 2011-09-14 16:56:37 UTC, user_id: 1>] 
 ruby-1.9.2-p290 :013 > 
 ```
 
