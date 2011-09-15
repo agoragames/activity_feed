@@ -1,6 +1,7 @@
 require 'activity_feed/version'
 require 'activity_feed/feed'
 require 'active_support/core_ext/module/attribute_accessors'
+require 'active_support/inflector'
 
 require 'redis'
 
@@ -24,9 +25,7 @@ module ActivityFeed
       require 'activity_feed/active_record/item'
       klazz = ActivityFeed::ActiveRecord::Item
     else
-      require 'activity_feed/memory/item'
-      klazz = ActivityFeed::Memory::Item
-      @@persistence_type = :memory
+      klazz = "ActivityFeed::#{type.to_s.classify}::Item".constantize
     end
     
     @@persistence = klazz
@@ -38,16 +37,16 @@ module ActivityFeed
     item
   end
   
-  def self.load_item(item)
+  def self.load_item(item_or_item_id)
     case @@persistence_type
     when :memory
-      JSON.parse(item)
+      JSON.parse(item_or_item_id)
     when :mongo_mapper
-      ActivityFeed::MongoMapper::Item.find(item)
+      ActivityFeed::MongoMapper::Item.find(item_or_item_id)
     when :active_record
-      ActivityFeed::ActiveRecord::Item.find(item)
+      ActivityFeed::ActiveRecord::Item.find(item_or_item_id)
     else
-      item
+      @@persistence.find(item_or_item_id)    
     end
   end
   

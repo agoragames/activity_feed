@@ -4,6 +4,7 @@ require 'redis'
 require 'mongo_mapper'
 require 'database_cleaner'
 require 'fabrication'
+require 'json'
 
 $redis = Redis.new(:host => '127.0.0.1', :port => 6379)
 
@@ -44,6 +45,8 @@ DatabaseCleaner[:mongo_mapper].strategy = :truncation
 require 'activity_feed'
 
 ActivityFeed.redis = $redis
+
+require 'activity_feed/custom/item'
 
 RSpec.configure do |config|
   config.mock_with :rspec

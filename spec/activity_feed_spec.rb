@@ -69,4 +69,28 @@ describe ActivityFeed do
       loaded_item.should == item
     end
   end
+  
+  describe 'custom persistence' do        
+    it 'should allow you to define a custom persistence handler class' do
+      ActivityFeed.persistence = :custom
+    end
+    
+    it 'should allow you to create a new item using a custom persistence handler class' do
+      user_id = 1
+      ActivityFeed.persistence = :custom
+
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
+      ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
+    end
+    
+    it 'should allow you to load an item using a custom persistence handler class' do
+      user_id = 1
+      ActivityFeed.persistence = :custom
+      
+      item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      loaded_item = ActivityFeed.load_item(item.to_json)
+      loaded_item.should == JSON.parse(item.to_json)
+    end
+  end
 end

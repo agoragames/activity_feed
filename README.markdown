@@ -167,6 +167,29 @@ ruby-1.9.2-p290 :012 > feed.page(1)
 ruby-1.9.2-p290 :013 > 
 ```
 
+### Custom persistence
+
+ActivityFeed can also use a custom class to do more customization. You can set this using:
+
+```ruby
+ActivityFeed.persistence = :custom
+```
+
+This will try to load the following class:
+
+```ruby
+ActivityFeed::Custom::Item""
+```
+
+If you set persistence to be `:foo`, it would try to load the following class:
+
+```ruby
+ActivityFeed::Foo::Item
+```
+
+The custom class should implement a find(item_or_item_id) method that does "the right thing". 
+Consult the specs to see this working if you have questions.
+
 ## Contributing to Activity Feed
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
