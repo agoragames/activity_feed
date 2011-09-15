@@ -13,17 +13,17 @@ module ActivityFeed
     
     case type
     when :memory
-      require 'activity_feed/memory_item'
-      klazz = ActivityFeed::MemoryItem      
+      require 'activity_feed/memory/item'
+      klazz = ActivityFeed::Memory::Item      
     when :mongo_mapper
-      require 'activity_feed/mongo_mapper_item'
-      klazz = ActivityFeed::MongoMapperItem
+      require 'activity_feed/mongo_mapper/item'
+      klazz = ActivityFeed::MongoMapper::Item
     when :active_record
-      require 'activity_feed/active_record_item'
-      klazz = ActivityFeed::ActiveRecordItem
+      require 'activity_feed/active_record/item'
+      klazz = ActivityFeed::ActiveRecord::Item
     else
-      require 'activity_feed/memory_item'
-      klazz = ActivityFeed::MemoryItem
+      require 'activity_feed/memory/item'
+      klazz = ActivityFeed::Memory::Item
       @@persistence_type = :memory
     end
     
@@ -41,9 +41,9 @@ module ActivityFeed
     when :memory
       JSON.parse(item)
     when :mongo_mapper
-      ActivityFeed::MongoMapperItem.find(item)
+      ActivityFeed::MongoMapper::Item.find(item)
     when :active_record
-      ActivityFeed::ActiveRecordItem.find(item)
+      ActivityFeed::ActiveRecord::Item.find(item)
     else
       item
     end

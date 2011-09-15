@@ -5,7 +5,7 @@ describe ActivityFeed do
     ActivityFeed.namespace.should eql('activity')
     ActivityFeed.key.should eql('feed')
     ActivityFeed.persistence = :memory
-    ActivityFeed.persistence.should be(ActivityFeed::MemoryItem)
+    ActivityFeed.persistence.should be(ActivityFeed::Memory::Item)
   end
   
   describe 'creating' do
@@ -22,22 +22,22 @@ describe ActivityFeed do
       user_id = 1
       ActivityFeed.persistence = :mongo_mapper
       
-      ActivityFeed::MongoMapperItem.count.should be(0)
+      ActivityFeed::MongoMapper::Item.count.should be(0)
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
       ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
-      ActivityFeed::MongoMapperItem.count.should be(1)
+      ActivityFeed::MongoMapper::Item.count.should be(1)
     end
 
     it 'should allow you to create a new item using :active_record' do
       user_id = 1
       ActivityFeed.persistence = :active_record
       
-      ActivityFeed::ActiveRecordItem.count.should be(0)
+      ActivityFeed::ActiveRecord::Item.count.should be(0)
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
       ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
-      ActivityFeed::ActiveRecordItem.count.should be(1)
+      ActivityFeed::ActiveRecord::Item.count.should be(1)
     end
   end
   
