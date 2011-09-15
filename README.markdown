@@ -12,7 +12,7 @@ The gem has been built and tested under Ruby 1.9.2-p290
 
 or:
 
-`gem 'activity_feed'`
+`gem 'activity_feed', :git => 'git@github.com:agoragames/activity_feed.git'`
 
 Make sure your redis server is running! Redis configuration is outside the scope of this README, but 
 check out the Redis documentation, http://redis.io/documentation.
