@@ -2,6 +2,8 @@ require 'activity_feed/version'
 require 'activity_feed/feed'
 require 'active_support/core_ext/module/attribute_accessors'
 
+require 'redis'
+
 module ActivityFeed
   mattr_accessor :redis
   mattr_accessor :namespace

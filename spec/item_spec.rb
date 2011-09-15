@@ -27,4 +27,16 @@ describe 'ActivityFeed::Item' do
     item.icon.should eql('http://icon')
     item.sticky.should be_false
   end
+  
+  it 'should not create a new item in Redis after saving, only on create' do
+    item = Fabricate.build(ActivityFeed::Memory::Item)
+    
+    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(0)
+    item.save
+    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
+    
+    item.text = 'updated text'
+    item.save
+    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
+  end
 end
