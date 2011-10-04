@@ -1,6 +1,6 @@
 # ActivityFeed
 
-Activity feeds in Redis
+Activity feeds backed by Redis
 
 ## Compatibility
 
