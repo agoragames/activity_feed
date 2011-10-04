@@ -23,7 +23,7 @@ check out the Redis documentation, http://redis.io/documentation.
 ActivityFeed.redis = Redis.new(:host => '127.0.0.1', :port => 6379)
 ActivityFeed.namespace = 'activity'
 ActivityFeed.key = 'feed'
-ActivityFeed.persistence = :memory (or :active_record or _:mongo_mapper)
+ActivityFeed.persistence = :memory (or :active_record or :mongo_mapper)
 ```
 
 ## Usage

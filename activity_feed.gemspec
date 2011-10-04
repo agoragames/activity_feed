@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ['David Czarnecki']
   s.email       = ['dczarnecki@agoragames.com']
   s.homepage    = 'https://github.com/agoragames/activity_feed'
-  s.summary     = %q{Activity feeds backed by MongoDB and Redis}
-  s.description = %q{Activity feeds backed by MongoDB and Redis}
+  s.summary     = %q{Activity feeds in Redis}
+  s.description = %q{Activity feeds in Redis}
 
   s.rubyforge_project = 'activity_feed'
 
