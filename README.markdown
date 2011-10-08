@@ -167,7 +167,7 @@ ruby-1.9.2-p290 :012 > feed.page(1)
 ruby-1.9.2-p290 :013 > 
 ```
 
-### Ohm-backed persistence
+### Ohm persistence
 
 ActivityFeed can also use Ohm to persist the items in Redis. You can set this using:
 
