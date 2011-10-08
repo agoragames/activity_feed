@@ -167,6 +167,32 @@ ruby-1.9.2-p290 :012 > feed.page(1)
 ruby-1.9.2-p290 :013 > 
 ```
 
+### Ohm-backed persistence
+
+ActivityFeed can also use Ohm to persist the items in Redis. You can set this using:
+
+```ruby
+ruby-1.9.2-p290 :001 > require 'redis'
+ => true 
+ruby-1.9.2-p290 :002 > $redis = Redis.new(:host => 'localhost', :port => 6379)
+ => #<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.5)> 
+ruby-1.9.2-p290 :003 > require 'activity_feed'
+ => true 
+ruby-1.9.2-p290 :004 > ActivityFeed.redis = $redis
+ => #<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.5)> 
+ruby-1.9.2-p290 :005 > ActivityFeed.persistence = :ohm
+ => :ohm 
+ruby-1.9.2-p290 :006 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
+ => #<ActivityFeed::Ohm::Item:1 created_at="2011-10-08 17:40:03 UTC" updated_at="2011-10-08 17:40:03 UTC" user_id=1 nickname="David Czarnecki" type="activity-type" title=nil text="Text" url=nil icon=nil sticky=nil> 
+ruby-1.9.2-p290 :007 > ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'More text')
+ => #<ActivityFeed::Ohm::Item:2 created_at="2011-10-08 17:40:25 UTC" updated_at="2011-10-08 17:40:25 UTC" user_id=1 nickname="David Czarnecki" type="activity-type" title=nil text="More text" url=nil icon=nil sticky=nil> 
+ruby-1.9.2-p290 :008 > feed = ActivityFeed::Feed.new(1)
+ => #<ActivityFeed::Feed:0x007fd009bc05f8 @feederboard=#<Leaderboard:0x007fd009bc0508 @leaderboard_name="activity:feed:1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://localhost:6379/0 (Redis v2.2.5)>>> 
+ruby-1.9.2-p290 :009 > feed.page(1)
+ => [#<ActivityFeed::Ohm::Item:2 created_at="2011-10-08 17:40:25 UTC" updated_at="2011-10-08 17:40:25 UTC" user_id="1" nickname="David Czarnecki" type="activity-type" title=nil text="More text" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:1 created_at="2011-10-08 17:40:03 UTC" updated_at="2011-10-08 17:40:03 UTC" user_id="1" nickname="David Czarnecki" type="activity-type" title=nil text="Text" url=nil icon=nil sticky=nil>] 
+ruby-1.9.2-p290 :010 > 
+```
+
 ### Custom persistence
 
 ActivityFeed can also use a custom class to do more customization. You can set this using:

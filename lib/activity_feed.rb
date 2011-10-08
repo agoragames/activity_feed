@@ -15,15 +15,18 @@ module ActivityFeed
     @@persistence_type = type
     
     case type
+    when :active_record
+      require 'activity_feed/active_record/item'
+      klazz = ActivityFeed::ActiveRecord::Item
     when :memory
       require 'activity_feed/memory/item'
       klazz = ActivityFeed::Memory::Item      
     when :mongo_mapper
       require 'activity_feed/mongo_mapper/item'
       klazz = ActivityFeed::MongoMapper::Item
-    when :active_record
-      require 'activity_feed/active_record/item'
-      klazz = ActivityFeed::ActiveRecord::Item
+    when :ohm
+      require 'activity_feed/ohm/item'
+      klazz = ActivityFeed::Ohm::Item
     else
       klazz = "ActivityFeed::#{type.to_s.classify}::Item".constantize
     end
@@ -39,12 +42,14 @@ module ActivityFeed
   
   def self.load_item(item_or_item_id)
     case @@persistence_type
+    when :active_record
+      ActivityFeed::ActiveRecord::Item.find(item_or_item_id)
     when :memory
       JSON.parse(item_or_item_id)
     when :mongo_mapper
       ActivityFeed::MongoMapper::Item.find(item_or_item_id)
-    when :active_record
-      ActivityFeed::ActiveRecord::Item.find(item_or_item_id)
+    when :ohm
+      ActivityFeed::Ohm::Item[item_or_item_id]
     else
       @@persistence.find(item_or_item_id)    
     end

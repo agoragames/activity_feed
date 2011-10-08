@@ -10,6 +10,18 @@ describe ActivityFeed::Feed do
     feed.page(1).size.should be(5)
   end
 
+  it 'should pull up the correct list of ActivityFeed::ActiveRecord::Item when calling #page using :active_record' do    
+    ActivityFeed.persistence = :active_record
+    ActivityFeed::ActiveRecord::Item.count.should be(0)
+    1.upto(5) do |index|
+      item = ActivityFeed.create_item(:user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
+    end
+    ActivityFeed::ActiveRecord::Item.count.should be(5)
+    
+    feed = ActivityFeed::Feed.new(1)
+    feed.page(1).size.should be(5)
+  end
+
   it 'should pull up the correct list of ActivityFeed::MongoMapper::Item when calling #page using :mongo_mapper' do    
     ActivityFeed.persistence = :mongo_mapper
     ActivityFeed::MongoMapper::Item.count.should be(0)
@@ -17,6 +29,18 @@ describe ActivityFeed::Feed do
       item = ActivityFeed.create_item(:user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
     end
     ActivityFeed::MongoMapper::Item.count.should be(5)
+    
+    feed = ActivityFeed::Feed.new(1)
+    feed.page(1).size.should be(5)
+  end
+
+  it 'should pull up the correct list of ActivityFeed::Ohm::Item when calling #page using :ohm' do    
+    ActivityFeed.persistence = :ohm
+    ActivityFeed::Ohm::Item.all.count.should be(0)
+    1.upto(5) do |index|
+      item = ActivityFeed.create_item(:user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
+    end
+    ActivityFeed::Ohm::Item.all.count.should be(5)
     
     feed = ActivityFeed::Feed.new(1)
     feed.page(1).size.should be(5)

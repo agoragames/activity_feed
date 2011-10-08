@@ -39,6 +39,17 @@ describe ActivityFeed do
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
       ActivityFeed::ActiveRecord::Item.count.should be(1)
     end
+
+    it 'should allow you to create a new item using :ohm' do
+      user_id = 1
+      ActivityFeed.persistence = :ohm
+      
+      ActivityFeed::Ohm::Item.all.count.should be(0)
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
+      ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
+      ActivityFeed::Ohm::Item.all.count.should be(1)
+    end
   end
   
   describe 'loading' do
@@ -63,6 +74,15 @@ describe ActivityFeed do
     it 'should allow you to load an item using :active_record' do
       user_id = 1
       ActivityFeed.persistence = :active_record
+      
+      item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      loaded_item = ActivityFeed.load_item(item.id)
+      loaded_item.should == item
+    end
+
+    it 'should allow you to load an item using :ohm' do
+      user_id = 1
+      ActivityFeed.persistence = :ohm
       
       item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       loaded_item = ActivityFeed.load_item(item.id)
