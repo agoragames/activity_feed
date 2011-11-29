@@ -21,7 +21,7 @@ module ActivityFeed
       private
 
       def update_redis
-        ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{self.user_id}", self.created_at.to_i, self.id)
+        ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{self.user_id}", DateTime.parse(self.created_at).to_i, self.id)
       end
     end
   end

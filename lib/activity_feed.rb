@@ -43,12 +43,15 @@ module ActivityFeed
     item    
   end
   
-  def self.aggregate_item(item)
+  def self.aggregate_item(item, user_id = nil)
+    user_id_for_aggregate = user_id.nil? ? item.user_id : user_id
     case @@persistence_type
-    when :active_record, :mongo_mapper, :ohm
-      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}", item.created_at.to_i, item.id)
+    when :active_record, :mongo_mapper
+      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id_for_aggregate}", item.created_at.to_i, item.id)
+    when :ohm
+      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id_for_aggregate}", DateTime.parse(item.created_at).to_i, item.id)
     else
-      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}", DateTime.now.to_i, item.attributes.to_json)
+      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id_for_aggregate}", DateTime.now.to_i, item.attributes.to_json)
     end
   end  
   

@@ -64,6 +64,22 @@ describe ActivityFeed::Feed do
     feed.total_pages.should be(2)
   end
   
+  describe 'feed aggregation' do
+    it 'should pull up the correct list of items from an aggregated activity feed' do
+      ActivityFeed.persistence = :ohm
+      1.upto(5) do |index|
+        item = ActivityFeed.create_item(:user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
+        another_item = ActivityFeed.create_item(:user_id => 2, :nickname => 'nickname_2', :text => "test_another_item_#{index}")
+        ActivityFeed.aggregate_item(another_item, 1)
+      end
+      
+      feed = ActivityFeed::Feed.new(1)
+      feed.total_pages(true).should be(1)
+      feed.total_items(true).should be(10)
+      feed.page(1, true).size.should be(10)
+    end
+  end
+  
   describe 'custom persistence' do
     it 'should allow you to pull up the correct list of ActivityFeed::Custom::Item when calling #page using :custom' do
       ActivityFeed.persistence = :custom

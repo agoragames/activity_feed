@@ -4,23 +4,26 @@ module ActivityFeed
   class Feed
     def initialize(user_id)
       @feederboard = Leaderboard.new("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}", Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
+      @feederboard_aggregate = Leaderboard.new("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}", Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
     end
     
-    def page(page)
+    def page(page, aggregate = false)
       feed_items = []
-      @feederboard.leaders(page).each do |feed_item|
+      
+      feed = aggregate ? @feederboard_aggregate : @feederboard
+      feed.leaders(page).each do |feed_item|
         feed_items << ActivityFeed.load_item(feed_item[:member])
       end
 
       feed_items
     end
     
-    def total_pages
-      @feederboard.total_pages
+    def total_pages(aggregate = false)
+      aggregate ? @feederboard_aggregate.total_pages : @feederboard.total_pages
     end
     
-    def total_items
-      @feederboard.total_members
+    def total_items(aggregate = false)
+      aggregate ? @feederboard_aggregate.total_members : @feederboard.total_members
     end
   end
 end

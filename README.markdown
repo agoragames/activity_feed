@@ -226,6 +226,47 @@ also add the item in Redis to an aggregate feed using the key: `ActivityFeed.nam
 You can control aggregation globally by setting the ActivityFeed.aggregate property to either `true` or `false`. You can override the global aggregation setting on the 
 `create_item` call by passing either `true` or `false` as the 2nd argument.
 
+Below is an example of an aggregate feed:
+
+```ruby
+ruby-1.9.2-p290 :001 > require 'activity_feed'
+ => true 
+ruby-1.9.2-p290 :002 > require 'pp'
+ => true 
+ruby-1.9.2-p290 :003 > 
+ruby-1.9.2-p290 :004 >   $redis = Redis.new(:host => '127.0.0.1', :port => 6379)
+ => #<Redis client v2.2.2 connected to redis://127.0.0.1:6379/0 (Redis v2.4.4)> 
+ruby-1.9.2-p290 :005 > ActivityFeed.redis = $redis
+ => #<Redis client v2.2.2 connected to redis://127.0.0.1:6379/0 (Redis v2.4.4)> 
+ruby-1.9.2-p290 :006 > ActivityFeed.persistence = :ohm
+ => :ohm 
+ruby-1.9.2-p290 :007 > 
+ruby-1.9.2-p290 :008 >   1.upto(5) do |index|
+ruby-1.9.2-p290 :009 >       item = ActivityFeed.create_item(:user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
+ruby-1.9.2-p290 :010?>     sleep(1)
+ruby-1.9.2-p290 :011?>     another_item = ActivityFeed.create_item(:user_id => 2, :nickname => 'nickname_2', :text => "test_nickname2_#{index}")
+ruby-1.9.2-p290 :012?>     sleep(1)
+ruby-1.9.2-p290 :013?>     ActivityFeed.aggregate_item(another_item, 1)
+ruby-1.9.2-p290 :014?>   end
+ => 1 
+ruby-1.9.2-p290 :015 > 
+ruby-1.9.2-p290 :016 >   feed = ActivityFeed::Feed.new(1)
+ => #<ActivityFeed::Feed:0x000001014b9298 @feederboard=#<Leaderboard:0x000001014b91a8 @leaderboard_name="activity:feed:1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://127.0.0.1:6379/0 (Redis v2.4.4)>>, @feederboard_aggregate=#<Leaderboard:0x000001014b9090 @leaderboard_name="activity:feed:aggregate:1", @page_size=25, @redis_connection=#<Redis client v2.2.2 connected to redis://127.0.0.1:6379/0 (Redis v2.4.4)>>> 
+ruby-1.9.2-p290 :017 > pp feed.page(1, true)
+[#<ActivityFeed::Ohm::Item:10 created_at="2011-11-29 21:18:40 UTC" updated_at="2011-11-29 21:18:40 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_5" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:9 created_at="2011-11-29 21:18:39 UTC" updated_at="2011-11-29 21:18:39 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_5" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:8 created_at="2011-11-29 21:18:38 UTC" updated_at="2011-11-29 21:18:38 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_4" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:7 created_at="2011-11-29 21:18:37 UTC" updated_at="2011-11-29 21:18:37 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_4" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:6 created_at="2011-11-29 21:18:36 UTC" updated_at="2011-11-29 21:18:36 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_3" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:5 created_at="2011-11-29 21:18:35 UTC" updated_at="2011-11-29 21:18:35 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_3" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:4 created_at="2011-11-29 21:18:34 UTC" updated_at="2011-11-29 21:18:34 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_2" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:3 created_at="2011-11-29 21:18:33 UTC" updated_at="2011-11-29 21:18:33 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_2" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:2 created_at="2011-11-29 21:18:32 UTC" updated_at="2011-11-29 21:18:32 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_1" url=nil icon=nil sticky=nil>,
+ #<ActivityFeed::Ohm::Item:1 created_at="2011-11-29 21:18:31 UTC" updated_at="2011-11-29 21:18:31 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_1" url=nil icon=nil sticky=nil>]
+ => [#<ActivityFeed::Ohm::Item:10 created_at="2011-11-29 21:18:40 UTC" updated_at="2011-11-29 21:18:40 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_5" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:9 created_at="2011-11-29 21:18:39 UTC" updated_at="2011-11-29 21:18:39 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_5" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:8 created_at="2011-11-29 21:18:38 UTC" updated_at="2011-11-29 21:18:38 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_4" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:7 created_at="2011-11-29 21:18:37 UTC" updated_at="2011-11-29 21:18:37 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_4" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:6 created_at="2011-11-29 21:18:36 UTC" updated_at="2011-11-29 21:18:36 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_3" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:5 created_at="2011-11-29 21:18:35 UTC" updated_at="2011-11-29 21:18:35 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_3" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:4 created_at="2011-11-29 21:18:34 UTC" updated_at="2011-11-29 21:18:34 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_2" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:3 created_at="2011-11-29 21:18:33 UTC" updated_at="2011-11-29 21:18:33 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_2" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:2 created_at="2011-11-29 21:18:32 UTC" updated_at="2011-11-29 21:18:32 UTC" user_id="2" nickname="nickname_2" type=nil title=nil text="test_nickname2_1" url=nil icon=nil sticky=nil>, #<ActivityFeed::Ohm::Item:1 created_at="2011-11-29 21:18:31 UTC" updated_at="2011-11-29 21:18:31 UTC" user_id="1" nickname="nickname_1" type=nil title=nil text="text_1" url=nil icon=nil sticky=nil>] 
+ruby-1.9.2-p290 :018 > 
+```
+
 ## Contributing to Activity Feed
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
