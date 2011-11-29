@@ -14,11 +14,11 @@ describe 'ActivityFeed::Item' do
   it 'should add the feed item ID to redis' do
     item = Fabricate.build(ActivityFeed.persistence)
           
-    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(0)
+    ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id)).should be(0)
     item.save
-    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
+    ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id)).should be(1)
     ActivityFeed.aggregate_item(item)
-    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}").should be(1)
+    ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id, true)).should be(1)
   end
   
   it 'should have default attributes for .title .url .icon and .sticky' do
@@ -33,16 +33,16 @@ describe 'ActivityFeed::Item' do
   it 'should not create a new item in Redis after saving, only on create' do
     item = Fabricate.build(ActivityFeed::Memory::Item)
     
-    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(0)
+    ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id)).should be(0)
     item.save
-    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
+    ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id)).should be(1)
     ActivityFeed.aggregate_item(item)
-    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}").should be(1)
+    ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id, true)).should be(1)
     
     item.text = 'updated text'
     item.save
-    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
+    ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id)).should be(1)
     ActivityFeed.aggregate_item(item)
-    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}").should be(1)
+    ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id, true)).should be(1)
   end
 end

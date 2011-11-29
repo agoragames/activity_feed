@@ -47,11 +47,11 @@ module ActivityFeed
     user_id_for_aggregate = user_id.nil? ? item.user_id : user_id
     case @@persistence_type
     when :active_record, :mongo_mapper
-      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id_for_aggregate}", item.created_at.to_i, item.id)
+      ActivityFeed.redis.zadd(ActivityFeed.feed_key(user_id_for_aggregate, true), item.created_at.to_i, item.id)
     when :ohm
-      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id_for_aggregate}", DateTime.parse(item.created_at).to_i, item.id)
+      ActivityFeed.redis.zadd(ActivityFeed.feed_key(user_id_for_aggregate, true), DateTime.parse(item.created_at).to_i, item.id)
     else
-      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id_for_aggregate}", DateTime.now.to_i, item.attributes.to_json)
+      ActivityFeed.redis.zadd(ActivityFeed.feed_key(user_id_for_aggregate, true), DateTime.now.to_i, item.attributes.to_json)
     end
   end  
   
@@ -67,6 +67,14 @@ module ActivityFeed
       ActivityFeed::Ohm::Item[item_or_item_id]
     else
       @@persistence.find(item_or_item_id)    
+    end
+  end
+  
+  def self.feed_key(user_id, aggregate = false)
+    if aggregate
+      "#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}"
+    else
+      "#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}"
     end
   end
   

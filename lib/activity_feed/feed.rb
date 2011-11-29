@@ -3,8 +3,8 @@ require 'leaderboard'
 module ActivityFeed
   class Feed
     def initialize(user_id)
-      @feederboard = Leaderboard.new("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}", Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
-      @feederboard_aggregate = Leaderboard.new("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}", Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
+      @feederboard = Leaderboard.new(ActivityFeed.feed_key(user_id), Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
+      @feederboard_aggregate = Leaderboard.new(ActivityFeed.feed_key(user_id, true), Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
     end
     
     def page(page, aggregate = false)
