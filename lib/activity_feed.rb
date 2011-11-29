@@ -10,6 +10,8 @@ module ActivityFeed
   mattr_accessor :namespace
   mattr_accessor :key
   mattr_accessor :persistence
+  mattr_accessor :aggregate_key
+  mattr_accessor :aggregate  
     
   def self.persistence=(type = :memory)
     @@persistence_type = type
@@ -34,11 +36,21 @@ module ActivityFeed
     @@persistence = klazz
   end
   
-  def self.create_item(attributes)
+  def self.create_item(attributes, aggregate = ActivityFeed.aggregate)
     item = @@persistence.new(attributes)
     item.save
-    item
+    ActivityFeed.aggregate_item(item) if aggregate
+    item    
   end
+  
+  def self.aggregate_item(item)
+    case @@persistence_type
+    when :active_record, :mongo_mapper, :ohm
+      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}", item.created_at.to_i, item.id)
+    else
+      ActivityFeed.redis.zadd("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}", DateTime.now.to_i, item.attributes.to_json)
+    end
+  end  
   
   def self.load_item(item_or_item_id)
     case @@persistence_type
@@ -57,5 +69,7 @@ module ActivityFeed
   
   self.namespace = 'activity'
   self.key = 'feed'
+  self.aggregate_key = 'aggregate'
+  self.aggregate = true
   self.persistence = :memory
 end

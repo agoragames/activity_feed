@@ -17,6 +17,8 @@ describe 'ActivityFeed::Item' do
     ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(0)
     item.save
     ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
+    ActivityFeed.aggregate_item(item)
+    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}").should be(1)
   end
   
   it 'should have default attributes for .title .url .icon and .sticky' do
@@ -34,9 +36,13 @@ describe 'ActivityFeed::Item' do
     ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(0)
     item.save
     ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
+    ActivityFeed.aggregate_item(item)
+    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}").should be(1)
     
     item.text = 'updated text'
     item.save
     ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{item.user_id}").should be(1)
+    ActivityFeed.aggregate_item(item)
+    ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{item.user_id}").should be(1)
   end
 end

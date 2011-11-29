@@ -21,6 +21,10 @@ module ActivityFeed
           self.send("#{key}=", value)
         end      
       end
+      
+      def attributes
+        @attributes
+      end
     
       def save
         raise 'user_id MUST be defined in the attributes' if user_id.blank?

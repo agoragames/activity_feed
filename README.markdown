@@ -24,6 +24,8 @@ ActivityFeed.redis = Redis.new(:host => '127.0.0.1', :port => 6379)
 ActivityFeed.namespace = 'activity'
 ActivityFeed.key = 'feed'
 ActivityFeed.persistence = :memory # (or :active_record or :mongo_mapper or :ohm)
+ActivityFeed.aggregate = true
+ActivityFeed.aggregate_key = 'aggregate'
 ```
 
 ## Usage
@@ -215,6 +217,14 @@ ActivityFeed::Foo::Item
 
 The custom class should implement a find(item_or_item_id) method that does "the right thing". 
 Consult the specs to see this working if you have questions.
+
+### Feeds and Aggregation Feeds
+
+activity_feed uses the following key in adding the item to Redis: `ActivityFeed.namespace:ActivityFeed.key:self.user_id`. By default, activity_feed in the `create_item` call will 
+also add the item in Redis to an aggregate feed using the key: `ActivityFeed.namespace:ActivityFeed.key:ActivityFeed.aggregate_key:self.user_id`.
+
+You can control aggregation globally by setting the ActivityFeed.aggregate property to either `true` or `false`. You can override the global aggregation setting on the 
+`create_item` call by passing either `true` or `false` as the 2nd argument.
 
 ## Contributing to Activity Feed
 

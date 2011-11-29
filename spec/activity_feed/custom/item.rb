@@ -17,6 +17,10 @@ module ActivityFeed
           self.send("#{key}=", value)
         end      
       end
+      
+      def attributes
+        @attributes
+      end
 
       def self.find(item)
         JSON.parse(item)

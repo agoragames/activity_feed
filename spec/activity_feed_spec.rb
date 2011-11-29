@@ -1,11 +1,13 @@
 require 'spec_helper'
 
 describe ActivityFeed do
-  it 'should have defaults set for :namespace and :key' do
+  it 'should have defaults set' do
     ActivityFeed.namespace.should eql('activity')
     ActivityFeed.key.should eql('feed')
     ActivityFeed.persistence = :memory
     ActivityFeed.persistence.should be(ActivityFeed::Memory::Item)
+    ActivityFeed.aggregate_key.should eql('aggregate')
+    ActivityFeed.aggregate.should be(true)
   end
   
   describe 'creating' do
@@ -14,8 +16,9 @@ describe ActivityFeed do
       ActivityFeed.persistence = :memory
       
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
-      ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
-      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
+      activity_feed_item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}").should be(1)      
     end
     
     it 'should allow you to create a new item using :mongo_mapper' do
@@ -24,8 +27,9 @@ describe ActivityFeed do
       
       ActivityFeed::MongoMapper::Item.count.should be(0)
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
-      ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      activity_feed_item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}").should be(1)      
       ActivityFeed::MongoMapper::Item.count.should be(1)
     end
 
@@ -35,8 +39,9 @@ describe ActivityFeed do
       
       ActivityFeed::ActiveRecord::Item.count.should be(0)
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
-      ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      activity_feed_item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}").should be(1)      
       ActivityFeed::ActiveRecord::Item.count.should be(1)
     end
 
@@ -46,8 +51,21 @@ describe ActivityFeed do
       
       ActivityFeed::Ohm::Item.all.count.should be(0)
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
-      ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      activity_feed_item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}").should be(1)      
+      ActivityFeed::Ohm::Item.all.count.should be(1)
+    end
+
+    it 'should allow you to create a new item and not aggregate the item' do
+      user_id = 1
+      ActivityFeed.persistence = :ohm
+      
+      ActivityFeed::Ohm::Item.all.count.should be(0)
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
+      activity_feed_item = ActivityFeed.create_item({:user_id => user_id, :text => 'This is text for my activity feed'}, false)
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}").should be(0)
       ActivityFeed::Ohm::Item.all.count.should be(1)
     end
   end
@@ -100,8 +118,10 @@ describe ActivityFeed do
       ActivityFeed.persistence = :custom
 
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(0)
-      ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      activity_feed_item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{user_id}").should be(1)      
+      ActivityFeed.aggregate_item(activity_feed_item)
+      ActivityFeed.redis.zcard("#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}").should be(1)      
     end
     
     it 'should allow you to load an item using a custom persistence handler class' do

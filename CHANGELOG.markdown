@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2
+
+* Support aggregate feeds
+
 ## 1.1.1
 
 * Removing activemodel dependency since that is not needed
