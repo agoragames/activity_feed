@@ -18,6 +18,19 @@ module ActivityFeed
       
       after :save, :update_redis
       
+      def to_hash
+        super.merge(
+          :user_id => user_id,
+          :nickname => nickname,
+          :type => type,
+          :title => title,
+          :text => text,
+          :url => url,
+          :icon => icon,
+          :sticky => sticky
+        )
+      end
+      
       private
 
       def update_redis

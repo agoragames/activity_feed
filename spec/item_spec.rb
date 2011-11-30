@@ -45,4 +45,11 @@ describe 'ActivityFeed::Item' do
     ActivityFeed.aggregate_item(item)
     ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id, true)).should be(1)
   end
+  
+  it 'should output all the attributes for an item for Ohm' do
+    item = Fabricate.build(ActivityFeed::Ohm::Item)
+    
+    hash = JSON.parse(JSON.generate(item))
+    hash.keys.size.should be(8)
+  end
 end
