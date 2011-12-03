@@ -220,6 +220,18 @@ Consult the specs to see this working if you have questions.
 
 ### Feeds and Aggregation Feeds
 
+You can access an activity feed in a couple of ways.
+
+```ruby
+ActivityFeed.feed(user_id) # return an instance of ActivityFeed::Feed
+```
+
+or
+
+```ruby
+ActivityFeed::Feed.new(user_id)
+```
+
 activity_feed uses the following key in adding the item to Redis: `ActivityFeed.namespace:ActivityFeed.key:self.user_id`. By default, activity_feed in the `create_item` call will 
 also add the item in Redis to an aggregate feed using the key: `ActivityFeed.namespace:ActivityFeed.key:ActivityFeed.aggregate_key:self.user_id`.
 

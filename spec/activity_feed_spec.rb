@@ -133,4 +133,16 @@ describe ActivityFeed do
       loaded_item.should == JSON.parse(item.to_json)
     end
   end
+  
+  describe 'feed' do
+    it 'should allow you to create a new ActivityFeed::Feed instance' do
+      user_id = 1
+      ActivityFeed.persistence = :ohm
+      
+      item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      feed = ActivityFeed.feed(user_id)
+      
+      feed.total_items.should be(1)
+    end
+  end
 end

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.1
+
+* ActivityFeed.feed(user_id) will now return an instance of ActivityFeed::Feed
+
 ## 1.2
 
 * Support aggregate feeds

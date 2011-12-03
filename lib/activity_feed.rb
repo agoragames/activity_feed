@@ -78,6 +78,10 @@ module ActivityFeed
     end
   end
   
+  def self.feed(user_id)
+    ActivityFeed::Feed.new(user_id)
+  end
+  
   self.namespace = 'activity'
   self.key = 'feed'
   self.aggregate_key = 'aggregate'
