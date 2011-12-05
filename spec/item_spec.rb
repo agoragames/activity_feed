@@ -49,7 +49,7 @@ describe 'ActivityFeed::Item' do
   it 'should output all the attributes for an item for Ohm' do
     item = Fabricate.build(ActivityFeed::Ohm::Item)
     
-    hash = JSON.parse(JSON.generate(item))
+    hash = JSON.parse(item.to_json)
     hash.keys.size.should be(8)
   end
 end
