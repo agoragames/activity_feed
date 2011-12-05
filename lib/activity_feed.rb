@@ -39,7 +39,11 @@ module ActivityFeed
   def self.create_item(attributes, aggregate = ActivityFeed.aggregate)
     item = @@persistence.new(attributes)
     item.save
-    ActivityFeed.aggregate_item(item) if aggregate
+    if aggregate
+      ([item.user_id] | Array(aggregate)).each do |aggregation_id|
+        ActivityFeed.aggregate_item(item, aggregation_id)
+      end
+    end
     item    
   end
   
@@ -85,6 +89,6 @@ module ActivityFeed
   self.namespace = 'activity'
   self.key = 'feed'
   self.aggregate_key = 'aggregate'
-  self.aggregate = true
+  self.aggregate = []
   self.persistence = :memory
 end

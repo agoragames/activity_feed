@@ -7,7 +7,7 @@ describe ActivityFeed do
     ActivityFeed.persistence = :memory
     ActivityFeed.persistence.should be(ActivityFeed::Memory::Item)
     ActivityFeed.aggregate_key.should eql('aggregate')
-    ActivityFeed.aggregate.should be(true)
+    ActivityFeed.aggregate.should == []
   end
   
   describe 'creating' do
@@ -144,5 +144,42 @@ describe ActivityFeed do
       
       feed.total_items.should be(1)
     end
+  end
+
+  describe ".create_item" do
+    let(:user_id) { 1 }
+    let(:friend_ids) { [99, 1337] }
+    let(:item_attrs) {
+      { "user_id" => user_id, "text" => 'This is my happy activity' }
+    }
+    
+    context "with no explicit aggregation set" do
+      it "just creates the item and saves it to the user's feed" do
+        ActivityFeed.create_item(item_attrs)
+        ActivityFeed.redis.zcard(ActivityFeed.feed_key(user_id)).should be(1)
+        feed = ActivityFeed::Feed.new(user_id)
+        feed.page(1).first.should == item_attrs
+      end
+    end
+    
+    context "with the optional second parameter set to a falsy value" do
+      it "only creates the item--without adding it to the aggregation feed" do
+        ActivityFeed.create_item(item_attrs, false)
+        feed = ActivityFeed::Feed.new(user_id)
+        feed.page(1).size.should be(1) # user-only feed
+        feed.page(1, true).should be_empty # aggregation feed
+      end
+    end
+    
+    context "with a list of aggregation ids as a second parameter" do
+      it "creates the item and aggregates it out to all the feeds" do
+        ActivityFeed.create_item(item_attrs, friend_ids)
+        ( friend_ids << user_id ).each do |id|
+          feed = ActivityFeed::Feed.new(id)
+          feed.page(1, true).first.should == item_attrs
+        end
+      end
+    end
+    
   end
 end
