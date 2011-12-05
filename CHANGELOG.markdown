@@ -3,6 +3,7 @@
 ## 1.2.1
 
 * ActivityFeed.feed(user_id) will now return an instance of ActivityFeed::Feed
+* ActivityFeed::Ohm::Item will now return all of its attributes when calling to_json 
 
 ## 1.2
 
