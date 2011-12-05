@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.2
+
+* ActivityFeed.create_item(attributes, aggregate) can take an array of user_ids as its 2nd parameter if you want to fan out to the aggregation on create
+
 ## 1.2.1
 
 * ActivityFeed.feed(user_id) will now return an instance of ActivityFeed::Feed
