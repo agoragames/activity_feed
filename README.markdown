@@ -291,4 +291,4 @@ ruby-1.9.2-p290 :018 >
 
 ## Copyright
 
-Copyright (c) 2011 David Czarnecki. See LICENSE.txt for further details.
+Copyright (c) 2011-2012 David Czarnecki. See LICENSE.txt for further details.
