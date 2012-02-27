@@ -46,6 +46,10 @@ require 'activity_feed'
 
 ActivityFeed.redis = $redis
 
+require 'activity_feed/active_record/item'
+require 'activity_feed/memory/item'
+require 'activity_feed/mongo_mapper/item'
+require 'activity_feed/ohm/item'
 require 'activity_feed/custom/item'
 
 RSpec.configure do |config|
