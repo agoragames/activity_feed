@@ -279,6 +279,10 @@ ruby-1.9.2-p290 :017 > pp feed.page(1, true)
 ruby-1.9.2-p290 :018 > 
 ```
 
+## Future Plans
+
+* Allow you to bump the updated time for a given activity item
+
 ## Contributing to Activity Feed
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
