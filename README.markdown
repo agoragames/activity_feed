@@ -281,7 +281,8 @@ ruby-1.9.2-p290 :018 >
 
 ## Future Plans
 
-* Allow you to bump the updated time for a given activity item
+* Allow you to bump the updated time for a given activity item (need to do this for personal feed and aggregate feed)
+* Allow you to remove a given activity item (need to do this for personal feed and aggregate feed)
 
 ## Contributing to Activity Feed
 
