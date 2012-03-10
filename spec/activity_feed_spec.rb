@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'timecop'
 
 describe ActivityFeed do
   it 'should have defaults set' do
@@ -146,7 +147,7 @@ describe ActivityFeed do
     end
   end
 
-  describe ".create_item" do
+  describe "create_item" do
     let(:user_id) { 1 }
     let(:friend_ids) { [99, 1337] }
     let(:item_attrs) {
@@ -179,7 +180,77 @@ describe ActivityFeed do
           feed.page(1, true).first.should == item_attrs
         end
       end
+    end    
+  end
+
+  describe "delete_item" do
+    let(:user_id) { 1 }
+    let(:item_attrs) {
+      { "user_id" => user_id, "text" => 'This is my happy activity' }
+    }
+
+    context "non-memory backed persistence" do
+      before(:each) do
+        ActivityFeed.persistence = :ohm
+        @item = ActivityFeed.create_item(item_attrs, true)
+      end
+
+      it "should allow you to delete an item from the personal activity feed" do
+        feed = ActivityFeed::Feed.new(user_id)
+        feed.total_items.should == 1
+        ActivityFeed.delete_item(user_id, @item.id)
+        feed.total_items.should == 0
+      end
+
+      it "should allow you to delete an item from the personal aggregate feed" do
+        feed = ActivityFeed::Feed.new(user_id)
+        feed.total_items(true).should == 1
+        ActivityFeed.delete_item(user_id, @item.id, true)
+        feed.total_items(true).should == 0
+      end
     end
-    
+  end
+
+  describe "update_item" do
+    let(:user_id) { 1 }
+    let(:item_attrs) {
+      { "user_id" => user_id, "text" => 'This is my happy activity' }
+    }
+
+    it "should allow you to update an item from the personal activity feed" do
+      ActivityFeed.persistence = :ohm
+
+      item_1 = ActivityFeed.create_item(item_attrs, false)
+      Timecop.travel(DateTime.now + 10)
+      item_2 = ActivityFeed.create_item(item_attrs, false)
+      Timecop.travel(DateTime.now + 10)
+      item_3 = ActivityFeed.create_item(item_attrs, false)
+      Timecop.travel(DateTime.now + 10)
+
+      feed = ActivityFeed::Feed.new(user_id)
+      feed.page(1).first.id.should == '3'
+
+      ActivityFeed.update_item(user_id, 1, DateTime.now.to_i)
+      feed.page(1).first.id.should == '1'
+      Timecop.return
+    end
+
+    it "should allow you to update an item from the personal aggregate feed" do
+      ActivityFeed.persistence = :ohm
+
+      item_1 = ActivityFeed.create_item(item_attrs, true)
+      Timecop.travel(DateTime.now + 10)
+      item_2 = ActivityFeed.create_item(item_attrs, true)
+      Timecop.travel(DateTime.now + 10)
+      item_3 = ActivityFeed.create_item(item_attrs, true)
+      Timecop.travel(DateTime.now + 10)
+
+      feed = ActivityFeed::Feed.new(user_id)
+      feed.page(1, true).first.id.should == '3'
+
+      ActivityFeed.update_item(user_id, 1, DateTime.now.to_i, true)
+      feed.page(1, true).first.id.should == '1'
+      Timecop.return
+    end
   end
 end

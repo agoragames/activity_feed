@@ -33,6 +33,8 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency('ohm')
   s.add_development_dependency('ohm-contrib')
+
+  s.add_development_dependency('timecop')
    
   s.add_dependency('activesupport')
   s.add_dependency('i18n')

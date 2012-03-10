@@ -279,10 +279,18 @@ ruby-1.9.2-p290 :017 > pp feed.page(1, true)
 ruby-1.9.2-p290 :018 > 
 ```
 
+### Updating and Removing Activity Feed Items
+
+You can use the following methods to update and removing activity feed items, respectively:
+
+```ruby
+ActivityFeed.update_item(user_id, item_id, timestamp, aggregate = false)
+ActivityFeed.delete_item(user_id, item_id, aggregate = false)
+```
+
 ## Future Plans
 
-* Allow you to bump the updated time for a given activity item (need to do this for personal feed and aggregate feed)
-* Allow you to remove a given activity item (need to do this for personal feed and aggregate feed)
+* Suggestions?
 
 ## Contributing to Activity Feed
 

@@ -73,7 +73,21 @@ module ActivityFeed
       @@persistence.find(item_or_item_id)    
     end
   end
-  
+
+  def self.update_item(user_id, item_id, timestamp, aggregate = false)
+    unless @@persistence_type == :memory
+      key = feed_key(user_id, aggregate)
+      ActivityFeed.redis.zadd(key, timestamp, item_id)
+    end
+  end
+
+  def self.delete_item(user_id, item_id, aggregate = false)
+    unless @@persistence_type == :memory
+      key = feed_key(user_id, aggregate)
+      ActivityFeed.redis.zrem(key, item_id)
+    end
+  end
+
   def self.feed_key(user_id, aggregate = false)
     if aggregate
       "#{ActivityFeed.namespace}:#{ActivityFeed.key}:#{ActivityFeed.aggregate_key}:#{user_id}"
