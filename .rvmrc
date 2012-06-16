@@ -1,1 +1,1 @@
-rvm use ruby-1.9.3-p0@activity_feed_gem --create
+rvm use ruby-1.9.3@activity_feed_gem --create
