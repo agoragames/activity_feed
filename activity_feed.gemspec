@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('database_cleaner')
   s.add_development_dependency('fabrication')
   
+  s.add_development_dependency('mongoid')
   s.add_development_dependency('mongo_mapper')
   s.add_development_dependency('mongo_ext')
   s.add_development_dependency('bson_ext')

@@ -133,6 +133,40 @@ feed = ActivityFeed::Feed.new(1)
 feed.page(1)
 ```
 
+### Mongoid persistence
+
+ActivityFeed can also use Mongoid to persist the items to more durable storage while 
+keeping the IDs for the activity feed items in Redis. You can set this using:
+
+```ruby
+ActivityFeed.persistence = :mongoid
+```
+
+Make sure Mongoid is configured correctly before setting this option. 
+If using Activity Feed outside of Rails, you can do: 
+
+```ruby
+Mongoid.configure do |config|
+  config.master = Mongo::Connection.new.db("activity_feed_gem_test")
+end
+```
+
+```ruby
+require 'mongoid'
+Mongoid.configure do |config|
+  config.master = Mongo::Connection.new.db("activity_feed_gem_test")
+end
+require 'redis'
+$redis = Redis.new(:host => 'localhost', :port => 6379)
+require 'activity_feed'
+ActivityFeed.redis = $redis
+ActivityFeed.persistence = :mongoid
+ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'Text')
+ActivityFeed.create_item(:user_id => 1, :nickname => 'David Czarnecki', :type => 'activity-type', :text => 'More text')
+feed = ActivityFeed::Feed.new(1)
+feed.page(1)
+```
+
 ### Ohm persistence
 
 ActivityFeed can also use Ohm to persist the items in Redis. You can set this using:
@@ -221,10 +255,6 @@ You can use the following methods to update and removing activity feed items, re
 ActivityFeed.update_item(user_id, item_id, timestamp, aggregate = false)
 ActivityFeed.delete_item(user_id, item_id, aggregate = false)
 ```
-
-## Future Plans
-
-* Suggestions?
 
 ## Contributing to Activity Feed
 

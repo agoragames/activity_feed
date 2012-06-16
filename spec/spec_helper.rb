@@ -2,6 +2,7 @@ require 'rubygems'
 require 'rspec'
 require 'redis'
 require 'mongo_mapper'
+require 'mongoid'
 require 'database_cleaner'
 require 'fabrication'
 require 'json'
@@ -10,7 +11,12 @@ $redis = Redis.new(:host => '127.0.0.1', :port => 6379)
 
 # TODO: Move to spec/mongo_mapper
 MongoMapper.connection = Mongo::Connection.new('localhost', 27017)
-MongoMapper.database = 'activity_feed_gem_test'
+MongoMapper.database = 'activity_feed_gem_test_mongo_mapper'
+
+Mongoid.configure do |config|
+  config.master = Mongo::Connection.new.db("activity_feed_gem_test_mongoid")
+  # config.mongoid.logger = false
+end
 
 # TODO: Move to spec/active_record
 require 'active_record'
@@ -41,6 +47,7 @@ end
 
 DatabaseCleaner[:active_record].strategy = :transaction
 DatabaseCleaner[:mongo_mapper].strategy = :truncation
+DatabaseCleaner[:mongoid].strategy = :truncation
 
 require 'activity_feed'
 
@@ -49,6 +56,7 @@ ActivityFeed.redis = $redis
 require 'activity_feed/active_record/item'
 require 'activity_feed/memory/item'
 require 'activity_feed/mongo_mapper/item'
+require 'activity_feed/mongoid/item'
 require 'activity_feed/ohm/item'
 require 'activity_feed/custom/item'
 

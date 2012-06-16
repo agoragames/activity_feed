@@ -26,6 +26,9 @@ module ActivityFeed
     when :mongo_mapper
       require 'activity_feed/mongo_mapper/item'
       klazz = ActivityFeed::MongoMapper::Item
+    when :mongoid
+      require 'activity_feed/mongoid/item'
+      klazz = ActivityFeed::Mongoid::Item
     when :ohm
       require 'activity_feed/ohm/item'
       klazz = ActivityFeed::Ohm::Item
@@ -50,7 +53,7 @@ module ActivityFeed
   def self.aggregate_item(item, user_id = nil)
     user_id_for_aggregate = user_id.nil? ? item.user_id : user_id
     case @@persistence_type
-    when :active_record, :mongo_mapper
+    when :active_record, :mongo_mapper, :mongoid
       ActivityFeed.redis.zadd(ActivityFeed.feed_key(user_id_for_aggregate, true), item.created_at.to_i, item.id)
     when :ohm
       ActivityFeed.redis.zadd(ActivityFeed.feed_key(user_id_for_aggregate, true), DateTime.parse(item.created_at).to_i, item.id)
@@ -67,6 +70,8 @@ module ActivityFeed
       JSON.parse(item_or_item_id)
     when :mongo_mapper
       ActivityFeed::MongoMapper::Item.find(item_or_item_id)
+    when :mongoid
+      ActivityFeed::Mongoid::Item.find(item_or_item_id)
     when :ohm
       ActivityFeed::Ohm::Item[item_or_item_id]
     else
