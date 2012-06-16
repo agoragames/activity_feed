@@ -34,6 +34,18 @@ describe ActivityFeed::Feed do
     feed.page(1).size.should be(5)
   end
 
+  it 'should pull up the correct list of ActivityFeed::Mongoid::Item when calling #page using :mongoid' do    
+    ActivityFeed.persistence = :mongoid
+    ActivityFeed::Mongoid::Item.count.should be(0)
+    1.upto(5) do |index|
+      item = ActivityFeed.create_item(:user_id => 1, :nickname => 'nickname_1', :text => "text_#{index}")
+    end
+    ActivityFeed::Mongoid::Item.count.should be(5)
+    
+    feed = ActivityFeed::Feed.new(1)
+    feed.page(1).size.should be(5)
+  end
+
   it 'should pull up the correct list of ActivityFeed::Ohm::Item when calling #page using :ohm' do    
     ActivityFeed.persistence = :ohm
     ActivityFeed::Ohm::Item.all.count.should be(0)

@@ -34,6 +34,18 @@ describe ActivityFeed do
       ActivityFeed::MongoMapper::Item.count.should be(1)
     end
 
+    it 'should allow you to create a new item using :mongoid' do
+      user_id = 1
+      ActivityFeed.persistence = :mongoid
+      
+      ActivityFeed::Mongoid::Item.count.should be(0)
+      ActivityFeed.redis.zcard(ActivityFeed.feed_key(user_id)).should be(0)
+      activity_feed_item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      ActivityFeed.redis.zcard(ActivityFeed.feed_key(user_id)).should be(1)      
+      ActivityFeed.redis.zcard(ActivityFeed.feed_key(user_id, true)).should be(1)      
+      ActivityFeed::Mongoid::Item.count.should be(1)
+    end
+
     it 'should allow you to create a new item using :active_record' do
       user_id = 1
       ActivityFeed.persistence = :active_record
@@ -84,6 +96,15 @@ describe ActivityFeed do
     it 'should allow you to load an item using :mongo_mapper' do
       user_id = 1
       ActivityFeed.persistence = :mongo_mapper
+      
+      item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
+      loaded_item = ActivityFeed.load_item(item.id)
+      loaded_item.should == item
+    end
+
+    it 'should allow you to load an item using :mongoid' do
+      user_id = 1
+      ActivityFeed.persistence = :mongoid
       
       item = ActivityFeed.create_item(:user_id => user_id, :text => 'This is text for my activity feed')
       loaded_item = ActivityFeed.load_item(item.id)
@@ -232,6 +253,24 @@ describe ActivityFeed do
 
       ActivityFeed.update_item(user_id, 1, DateTime.now.to_i)
       feed.page(1).first.id.should == '1'
+      Timecop.return
+    end
+
+    it "should allow you to update an item from the personal activity feed using :mongoid" do
+      ActivityFeed.persistence = :mongoid
+
+      item_1 = ActivityFeed.create_item(item_attrs, false)
+      Timecop.travel(DateTime.now + 10)
+      item_2 = ActivityFeed.create_item(item_attrs, false)
+      Timecop.travel(DateTime.now + 10)
+      item_3 = ActivityFeed.create_item(item_attrs, false)
+      Timecop.travel(DateTime.now + 10)
+
+      feed = ActivityFeed::Feed.new(user_id)
+      feed.page(1).first.id.should == item_3.id
+
+      ActivityFeed.update_item(user_id, item_1.id, DateTime.now.to_i)
+      feed.page(1).first.id.should == item_1.id
       Timecop.return
     end
 
