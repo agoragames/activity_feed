@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4.0
+
+* Added support for [Mongoid](http://www.mongoid.org)
+
 ## 1.3.0
 
 * `ActivityFeed.update_item(user_id, item_id, timestamp, aggregate = false)` allows for updating an activity feed item in the personal or aggregate feed
