@@ -2,17 +2,17 @@ require 'spec_helper'
 
 describe 'ActivityFeed::Item' do
   it 'should allow you to create a new Item' do
-    item = Fabricate.build(ActivityFeed.persistence)
+    item = Fabricate.build(ActivityFeed.persistence.to_s)
     item.save.should be_true
   end
   
   it 'should allow for a large amount of text' do
-    item = Fabricate.build(ActivityFeed.persistence, :text => '*' * 8192)
+    item = Fabricate.build(ActivityFeed.persistence.to_s, :text => '*' * 8192)
     item.text.should eql('*' * 8192)
   end
   
   it 'should add the feed item ID to redis' do
-    item = Fabricate.build(ActivityFeed.persistence)
+    item = Fabricate.build(ActivityFeed.persistence.to_s)
           
     ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id)).should be(0)
     item.save
@@ -22,7 +22,7 @@ describe 'ActivityFeed::Item' do
   end
   
   it 'should have default attributes for .title .url .icon and .sticky' do
-    item = Fabricate.build(ActivityFeed.persistence)
+    item = Fabricate.build(ActivityFeed.persistence.to_s)
     
     item.title.should eql('item title')
     item.url.should eql('http://url')
@@ -31,7 +31,7 @@ describe 'ActivityFeed::Item' do
   end
   
   it 'should not create a new item in Redis after saving, only on create' do
-    item = Fabricate.build(ActivityFeed::Memory::Item)
+    item = Fabricate.build(ActivityFeed::Memory::Item.to_s)
     
     ActivityFeed.redis.zcard(ActivityFeed.feed_key(item.user_id)).should be(0)
     item.save
@@ -47,7 +47,7 @@ describe 'ActivityFeed::Item' do
   end
   
   it 'should output all the attributes for an item for Ohm' do
-    item = Fabricate.build(ActivityFeed::Ohm::Item)
+    item = Fabricate.build(ActivityFeed::Ohm::Item.to_s)
     
     hash = JSON.parse(item.to_json)
     hash.keys.size.should be(8)
