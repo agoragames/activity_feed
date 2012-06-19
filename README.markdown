@@ -89,12 +89,14 @@ uses the `updated_at` time of the item, updated items will "bubble up" to the to
 activity feed.
 
 ```ruby
+# Configure Mongoid
 require 'mongoid'
 
 Mongoid.configure do |config|
   config.master = Mongo::Connection.new.db("activity_feed_gem_test")
 end
 
+# Create a class for activity feed items
 module ActivityFeed
   module Mongoid
     class Item
@@ -130,6 +132,7 @@ module ActivityFeed
   end
 end
 
+# Configure ActivityFeed
 require 'activity_feed'
 
 ActivityFeed.configure do |configuration|
@@ -141,6 +144,7 @@ ActivityFeed.configure do |configuration|
   configuration.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
 end
 
+# Create a couple of activity feed items
 activity_item_1 = ActivityFeed::Mongoid::Item.create(
   :user_id => 'david', 
   :nickname => 'David Czarnecki',
@@ -159,11 +163,14 @@ activity_item_2 = ActivityFeed::Mongoid::Item.create(
   :url => 'http://url.com'
 )
 
+# Pull up the activity feed
 feed = ActivityFeed.feed('david', 1)
  => [#<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000004, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Another great activity", text: "This is some other text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>, #<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000003, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Great activity", text: "This is text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>] 
 
+# Update an actitivity feed item
 activity_item_1.text = 'Updated some text for the activity feed item'
 
+# Pull up the activity feed item and notice that the item you updated has "bubbled up" to the top of the feed
 feed = ActivityFeed.feed('david', 1)
  => [#<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000003, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:11:27 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Great activity", text: "Updated some text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>, #<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000004, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Another great activity", text: "This is some other text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>] 
 ```
