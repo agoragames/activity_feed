@@ -4,7 +4,7 @@ Activity feeds backed by Redis
 
 ## Compatibility
 
-The gem has been built and tested under Ruby 1.9.3.
+The gem has been built and tested under Ruby 1.8.7 and Ruby 1.9.3.
 
 ## Installation
 

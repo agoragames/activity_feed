@@ -31,6 +31,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency('sqlite3')
   
   s.add_development_dependency('database_cleaner')
+
+  if '1.8.7'.eql?(RUBY_VERSION)
+    s.add_development_dependency('SystemTimer')
+  end
    
   s.add_dependency('leaderboard')
 end
