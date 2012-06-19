@@ -10,4 +10,15 @@ describe ActivityFeed::Utility do
       ActivityFeed.feed_key('david', true).should == 'activity_feed:aggregate:david'
     end
   end
+
+  describe '#feederboard_for' do
+    it 'should create a leaderboard using an existing Redis connection' do
+      feederboard_david = ActivityFeed.feederboard_for('david')
+      feederboard_person = ActivityFeed.feederboard_for('person')
+
+      feederboard_david.should_not be_nil
+      feederboard_person.should_not be_nil
+      ActivityFeed.redis.info["connected_clients"].to_i.should be(1)
+    end
+  end
 end
