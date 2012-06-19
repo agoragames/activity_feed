@@ -28,7 +28,7 @@ describe ActivityFeed::Feed do
   describe 'ORM loading' do
     describe 'Mongoid' do
       it 'should be able to load an item via Mongoid when requesting a feed' do
-        ActivityFeed.item_loading = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+        ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
       
         feed = ActivityFeed.feed('david', 1)
         feed.length.should == 0

@@ -4,8 +4,8 @@ module ActivityFeed
     # Redis instance.
     attr_accessor :redis
 
-    # Proc that will be called for loading an item from an ORM, e.g. Mongoid. Proc will be called with the ID of the item from the feed.
-    attr_accessor :item_loading
+    # Proc that will be called for loading an item from an ORM (e.g. ActiveRecord) or ODM (e.g. Mongoid). Proc will be called with the ID of the item from the feed.
+    attr_accessor :item_loader
 
     # ActivityFeed namespace for Redis.
     attr_writer :namespace
