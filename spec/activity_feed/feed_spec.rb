@@ -25,6 +25,42 @@ describe ActivityFeed::Feed do
     end
   end
 
+  describe '#total_pages_in_feed' do
+    describe 'without aggregation' do
+      it 'should return the correct number of pages in the activity feed' do
+        add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1)
+
+        ActivityFeed.total_pages_in_feed('david').should == 2
+      end
+    end
+
+    describe 'with aggregation' do
+      it 'should return the correct number of pages in the aggregate activity feed' do
+        add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
+
+        ActivityFeed.total_pages_in_feed('david', true).should == 2
+      end
+    end
+  end
+
+  describe '#total_items_in_feed' do
+    describe 'without aggregation' do
+      it 'should return the correct number of items in the activity feed' do
+        add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1)
+
+        ActivityFeed.total_items_in_feed('david').should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+      end
+    end
+
+    describe 'with aggregation' do
+      it 'should return the correct number of items in the aggregate activity feed' do
+        add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
+
+        ActivityFeed.total_items_in_feed('david', true).should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+      end
+    end
+  end
+
   describe 'ORM or ODM loading' do
     describe 'ActiveRecord' do
       it 'should be able to load an item via ActiveRecord when requesting a feed' do

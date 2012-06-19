@@ -24,5 +24,25 @@ module ActivityFeed
 
       feed_items
     end
+
+    # Return the total number of pages in the activity feed.
+    #
+    # @param user_id [String] User ID.
+    # @param aggregate [boolean, false] Whether to check the total number of pages in the aggregate activity feed or not.
+    #
+    # @return the total number of pages in the activity feed.
+    def total_pages_in_feed(user_id, aggregate = false)
+      ActivityFeed.feederboard_for(user_id, aggregate).total_pages
+    end
+
+    # Return the total number of items in the activity feed.
+    #
+    # @param user_id [String] User ID.
+    # @param aggregate [boolean, false] Whether to check the total number of items in the aggregate activity feed or not.
+    #
+    # @return the total number of items in the activity feed.
+    def total_items_in_feed(user_id, aggregate = false)
+      ActivityFeed.feederboard_for(user_id, aggregate).total_members
+    end
   end
 end
