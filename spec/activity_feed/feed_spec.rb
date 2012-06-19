@@ -25,7 +25,28 @@ describe ActivityFeed::Feed do
     end
   end
 
-  describe 'ORM loading' do
+  describe 'ORM or ODM loading' do
+    describe 'ActiveRecord' do
+      it 'should be able to load an item via ActiveRecord when requesting a feed' do
+        ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::ActiveRecord::Item.find(id) }
+      
+        feed = ActivityFeed.feed('david', 1)
+        feed.length.should == 0
+
+        item = ActivityFeed::ActiveRecord::Item.create(
+          :user_id => 'david', 
+          :nickname => 'David Czarnecki',
+          :type => 'some_activity',
+          :title => 'Great activity',
+          :body => 'This is text for the feed item'
+        )
+
+        feed = ActivityFeed.feed('david', 1)
+        feed.length.should == 1
+        feed[0].should == item
+      end
+    end
+
     describe 'Mongoid' do
       it 'should be able to load an item via Mongoid when requesting a feed' do
         ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }

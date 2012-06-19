@@ -2,6 +2,7 @@ require 'activity_feed'
 require 'timecop'
 require 'database_cleaner'
 require 'support/mongoid'
+require 'support/active_record'
 
 RSpec.configure do |config|
   config.mock_with :rspec
