@@ -23,6 +23,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rspec')
   s.add_development_dependency('activesupport')
   s.add_development_dependency('timecop')
+
+  s.add_development_dependency('mongoid')
+  s.add_development_dependency('bson_ext')
+  s.add_development_dependency('database_cleaner')
    
   s.add_dependency('leaderboard')
 end

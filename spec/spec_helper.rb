@@ -1,20 +1,31 @@
 require 'activity_feed'
 require 'timecop'
+require 'database_cleaner'
+require 'support/mongoid'
 
 RSpec.configure do |config|
   config.mock_with :rspec
   
   config.before(:all) do
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean_with(:truncation)
+
     ActivityFeed.configure do |configuration|
+      configuration.item_loading = nil
       configuration.redis = Redis.new(:db => 15)
     end
   end
 
   config.before(:each) do
+    DatabaseCleaner.start
+    DatabaseCleaner.clean
+
     ActivityFeed.redis.flushdb
   end
 
-  config.after(:all) do
+  config.after(:each) do
+    DatabaseCleaner.clean    
+
     ActivityFeed.redis.flushdb
     ActivityFeed.redis.quit
   end

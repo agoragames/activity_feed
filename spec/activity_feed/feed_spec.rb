@@ -24,4 +24,28 @@ describe ActivityFeed::Feed do
       end
     end
   end
+
+  describe 'ORM loading' do
+    describe 'Mongoid' do
+      it 'should be able to load an item via Mongoid when requesting a feed' do
+        ActivityFeed.item_loading = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+      
+        feed = ActivityFeed.feed('david', 1)
+        feed.length.should == 0
+
+        item = ActivityFeed::Mongoid::Item.create(
+          :user_id => 'david', 
+          :nickname => 'David Czarnecki',
+          :type => 'some_activity',
+          :title => 'Great activity',
+          :text => 'This is text for the feed item',
+          :url => 'http://url.com'
+        )
+
+        feed = ActivityFeed.feed('david', 1)
+        feed.length.should == 1
+        feed[0].should == item
+      end
+    end
+  end
 end

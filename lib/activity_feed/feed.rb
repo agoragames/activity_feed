@@ -5,7 +5,11 @@ module ActivityFeed
 
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
       feederboard.members(page).each do |feed_item|
-        feed_items << feed_item[:member]
+        if ActivityFeed.item_loading
+          feed_items << ActivityFeed.item_loading.call(feed_item[:member])
+        else
+          feed_items << feed_item[:member]
+        end
       end
 
       feed_items
