@@ -34,7 +34,9 @@ end
 ```
 
 ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) 
-with the `item_loader` configuration option when a page for a user's activity feed is requested. 
+with the `item_loader` configuration option when a page for a user's activity feed is requested.
+It will be called passing the item ID as its argument.
+
 For example:
 
 Assume you have defined a class for your items in Mongoid as follows:
@@ -73,7 +75,7 @@ module ActivityFeed
 end
 ```
 
-You would add the following option whereever you are configuring ActivityFeed as follows:
+You would add the following option where you are configuring ActivityFeed as follows:
 
 ```ruby
 ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
