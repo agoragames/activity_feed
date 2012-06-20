@@ -33,11 +33,15 @@ ActivityFeed.configure do |configuration|
 end
 ```
 
+* `redis`: The Redis connection instance to be used.
+* `namespace`: Namespace to isolate ActivityFeed data in Redis.
+* `aggregate`: Determines whether or not, by default, various calls will pull from the aggregate activity feed for a user.
+* `aggregate_key`: Further isolates the aggregate ActivityFeed data.
+* `page_size`: Number of activity feed items to be retrieved per-page.
+
 ### Advanced configuration options
 
-ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) 
-with the `item_loader` configuration option when a page for a user's activity feed is requested.
-This option should be set to a Proc that will be called passing the item ID as its only argument.
+* `item_loader`: ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) with the `item_loader` configuration option when a page for a user's activity feed is requested. This option should be set to a Proc that will be called passing the item ID as its only argument.
 
 For example:
 
