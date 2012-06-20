@@ -19,7 +19,7 @@ check out the [Redis documentation](http://redis.io/documentation).
 
 ## Configuration
 
-Basic configuration options:
+### Basic configuration options
 
 ```ruby
 require 'activity_feed'
@@ -33,9 +33,11 @@ ActivityFeed.configure do |configuration|
 end
 ```
 
+### Advanced configuration options
+
 ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) 
 with the `item_loader` configuration option when a page for a user's activity feed is requested.
-It will be called passing the item ID as its argument.
+This option should be set to a Proc that will be called passing the item ID as its only argument.
 
 For example:
 
