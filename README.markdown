@@ -35,8 +35,6 @@ end
 
 ### Advanced configuration options
 
-#### item_loader
-
 ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) 
 with the `item_loader` configuration option when a page for a user's activity feed is requested.
 This option should be set to a Proc that will be called passing the item ID as its only argument.
