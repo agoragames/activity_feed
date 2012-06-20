@@ -34,7 +34,7 @@ RSpec.configure do |config|
   # Helper method to add items to a given feed.
   # 
   # @param items_to_add [int] Number of items to add to the feed.
-  def add_items_to_feed(user_id, items_to_add = 5, aggregate = false)
+  def add_items_to_feed(user_id, items_to_add = 5, aggregate = ActivityFeed.aggregate)
     1.upto(items_to_add) do |index|
       ActivityFeed.update_item(user_id, index, DateTime.now.to_i, aggregate)
       Timecop.travel(DateTime.now + 10)

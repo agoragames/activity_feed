@@ -6,7 +6,7 @@ module ActivityFeed
     # Aggregate feed: +ActivityFeed.namespace:ActivityFeed.aggregate_key:user_id+
     # 
     # @return feed key.
-    def feed_key(user_id, aggregate = false)
+    def feed_key(user_id, aggregate = ActivityFeed.aggregate)
       aggregate ? 
         "#{ActivityFeed.namespace}:#{ActivityFeed.aggregate_key}:#{user_id}" :
         "#{ActivityFeed.namespace}:#{user_id}"
@@ -18,7 +18,7 @@ module ActivityFeed
     # @param aggregate [boolean, false] Whether to retrieve the aggregate feed for +user_id+ or not.
     #
     # @return reference to the activity feed for a given +user_id+.
-    def feederboard_for(user_id, aggregate = false)
+    def feederboard_for(user_id, aggregate = ActivityFeed.aggregate)
       ::Leaderboard.new(feed_key(user_id, aggregate), ::Leaderboard::DEFAULT_OPTIONS, {:redis_connection => ActivityFeed.redis})
     end
   end

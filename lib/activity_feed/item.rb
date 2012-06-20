@@ -6,7 +6,7 @@ module ActivityFeed
     # @param item_id [String] Item ID.
     # @param timestamp [int] Timestamp for the item being added or updated.
     # @param aggregate [boolean, false] Whether to add or update the item in the aggregate feed for +user_id+.
-    def update_item(user_id, item_id, timestamp, aggregate = false)
+    def update_item(user_id, item_id, timestamp, aggregate = ActivityFeed.aggregate)
       feederboard = ActivityFeed.feederboard_for(user_id)
       feederboard.rank_member(item_id, timestamp)
 

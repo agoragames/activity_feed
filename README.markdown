@@ -182,17 +182,17 @@ feed = ActivityFeed.feed('david', 1)
 ```ruby
 # Item-related
 
-ActivityFeed.update_item(user_id, item_id, timestamp, aggregate = false)
+ActivityFeed.update_item(user_id, item_id, timestamp, aggregate = ActivityFeed.aggregate)
 ActivityFeed.aggregate_item(user_id, item_id, timestamp)
 ActivityFeed.remove_item(user_id, item_id)
 
 # Feed-related
 
-ActivityFeed.feed(user_id, page, aggregate = false)
-ActivityFeed.feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = false)
-ActivityFeed.total_pages_in_feed(user_id, aggregate = false)
-ActivityFeed.total_items_in_feed(user_id, aggregate = false)
-ActivityFeed.trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = false)
+ActivityFeed.feed(user_id, page, aggregate = ActivityFeed.aggregate)
+ActivityFeed.feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
+ActivityFeed.total_pages_in_feed(user_id, aggregate = ActivityFeed.aggregate, page_size = ActivityFeed.page_size)
+ActivityFeed.total_items_in_feed(user_id, aggregate = ActivityFeed.aggregate)
+ActivityFeed.trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
 ActivityFeed.remove_feeds(user_id)
 ```
 

@@ -43,9 +43,9 @@ module ActivityFeed
 
     # Indicates whether or not aggregation is enabled.
     #
-    # @return whether or not aggregation is enabled or the default of +true+ if not set.
+    # @return whether or not aggregation is enabled or the default of +false+ if not set.
     def aggregate
-      @aggregate ||= true
+      @aggregate ||= false
     end
 
     # Key used in Redis for an individul's aggregate feed.

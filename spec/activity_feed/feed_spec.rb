@@ -85,6 +85,14 @@ describe ActivityFeed::Feed do
         ActivityFeed.total_pages_in_feed('david', true).should == 2
       end
     end
+
+    describe 'changing page_size parameter' do
+      it 'should return the correct number of pages in the activity feed' do
+        add_items_to_feed('david', 25)
+
+        ActivityFeed.total_pages_in_feed('david', false, 4).should == 7
+      end
+    end
   end
 
   describe '#remove_feeds' do

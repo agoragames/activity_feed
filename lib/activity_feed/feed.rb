@@ -10,11 +10,11 @@ module ActivityFeed
     # @param aggregate [boolean, false] Whether to retrieve the aggregate feed for +user_id+.
     # 
     # @return page from the activity feed for a given +user_id+.
-    def feed(user_id, page, aggregate = false)
+    def feed(user_id, page, aggregate = ActivityFeed.aggregate)
       feed_items = []
 
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
-      feederboard.members(page).each do |feed_item|
+      feederboard.members(page, :page_size => ActivityFeed.page_size).each do |feed_item|
         if ActivityFeed.item_loader
           feed_items << ActivityFeed.item_loader.call(feed_item[:member])
         else
@@ -37,7 +37,7 @@ module ActivityFeed
     # @param aggregate [boolean, false] Whether to retrieve items from the aggregate feed for +user_id+.
     # 
     # @return feed items from the activity feed for a given +user_id+ between the +starting_timestamp+ and +ending_timestamp+.
-    def feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = false)
+    def feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
       feed_items = []
 
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
@@ -58,8 +58,8 @@ module ActivityFeed
     # @param aggregate [boolean, false] Whether to check the total number of pages in the aggregate activity feed or not.
     #
     # @return the total number of pages in the activity feed.
-    def total_pages_in_feed(user_id, aggregate = false)
-      ActivityFeed.feederboard_for(user_id, aggregate).total_pages
+    def total_pages_in_feed(user_id, aggregate = ActivityFeed.aggregate, page_size = ActivityFeed.page_size)
+      ActivityFeed.feederboard_for(user_id, aggregate).total_pages_in(ActivityFeed.feed_key(user_id, aggregate), page_size)
     end
 
     # Return the total number of items in the activity feed.
@@ -68,7 +68,7 @@ module ActivityFeed
     # @param aggregate [boolean, false] Whether to check the total number of items in the aggregate activity feed or not.
     #
     # @return the total number of items in the activity feed.
-    def total_items_in_feed(user_id, aggregate = false)
+    def total_items_in_feed(user_id, aggregate = ActivityFeed.aggregate)
       ActivityFeed.feederboard_for(user_id, aggregate).total_members
     end
 
@@ -87,7 +87,7 @@ module ActivityFeed
     # @param user_id [String] User ID.
     # @param starting_timestamp [int] Starting timestamp after which activity feed items will be cut.
     # @param ending_timestamp [int] Ending timestamp before which activity feed items will be cut.
-    def trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = false)
+    def trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
       ActivityFeed.feederboard_for(user_id, aggregate).remove_members_in_score_range(starting_timestamp, ending_timestamp)
     end
   end
