@@ -25,6 +25,50 @@ describe ActivityFeed::Feed do
     end
   end
 
+  describe '#feed_between_timestamps' do
+    describe 'without aggregation' do
+      it 'should return activity feed items between the starting and ending timestamps' do
+        Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
+        ActivityFeed.update_item('david', 1, DateTime.now.to_i)
+        Timecop.travel(Time.local(2012, 6, 19, 4, 30, 0))
+        ActivityFeed.update_item('david', 2, DateTime.now.to_i)
+        Timecop.travel(Time.local(2012, 6, 19, 5, 30, 0))
+        ActivityFeed.update_item('david', 3, DateTime.now.to_i)
+        Timecop.travel(Time.local(2012, 6, 19, 6, 37, 0))
+        ActivityFeed.update_item('david', 4, DateTime.now.to_i)
+        Timecop.travel(Time.local(2012, 6, 19, 8, 17, 0))
+        ActivityFeed.update_item('david', 5, DateTime.now.to_i)
+        Timecop.return
+
+        feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i)
+        feed.length.should == 2
+        feed[0].to_i.should == 4
+        feed[1].to_i.should == 3
+      end
+    end
+
+    describe 'with aggregation' do
+      it 'should return activity feed items between the starting and ending timestamps' do
+        Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
+        ActivityFeed.update_item('david', 1, DateTime.now.to_i, true)
+        Timecop.travel(Time.local(2012, 6, 19, 4, 30, 0))
+        ActivityFeed.update_item('david', 2, DateTime.now.to_i, true)
+        Timecop.travel(Time.local(2012, 6, 19, 5, 30, 0))
+        ActivityFeed.update_item('david', 3, DateTime.now.to_i, true)
+        Timecop.travel(Time.local(2012, 6, 19, 6, 37, 0))
+        ActivityFeed.update_item('david', 4, DateTime.now.to_i, true)
+        Timecop.travel(Time.local(2012, 6, 19, 8, 17, 0))
+        ActivityFeed.update_item('david', 5, DateTime.now.to_i, true)
+        Timecop.return
+
+        feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
+        feed.length.should == 2
+        feed[0].to_i.should == 4
+        feed[1].to_i.should == 3
+      end
+    end
+  end
+
   describe '#total_pages_in_feed' do
     describe 'without aggregation' do
       it 'should return the correct number of pages in the activity feed' do
