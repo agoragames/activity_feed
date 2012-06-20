@@ -65,11 +65,11 @@ module ActivityFeed
 
       index :user_id
 
-      after_save :update_activity_feed    
+      after_save :update_item_in_activity_feed    
 
       private
 
-      def update_activity_feed
+      def update_item_in_activity_feed
         ActivityFeed.update_item(self.user_id, self.id, self.updated_at.to_i)
       end
     end
@@ -118,12 +118,12 @@ module ActivityFeed
 
       index :user_id
 
-      after_save :update_activity_feed
+      after_save :update_item_in_activity_feed
       after_destroy :remove_item_from_activity_feed
 
       private
 
-      def update_activity_feed
+      def update_item_in_activity_feed
         ActivityFeed.update_item(self.user_id, self.id, self.updated_at.to_i)
       end
 
@@ -171,6 +171,7 @@ feed = ActivityFeed.feed('david', 1)
 
 # Update an actitivity feed item
 activity_item_1.text = 'Updated some text for the activity feed item'
+activity_item_1.save
 
 # Pull up the activity feed item and notice that the item you updated has "bubbled up" to the top of the feed
 feed = ActivityFeed.feed('david', 1)
