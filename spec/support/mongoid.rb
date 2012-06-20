@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'mongoid'
 
 Mongoid.configure do |config|
-  config.master = Mongo::Connection.new.db("activity_feed_gem_test_mongoid")
+  config.master = Mongo::Connection.new.db("activity_feed_gem_test")
 end
 
 DatabaseCleaner[:mongoid].strategy = :truncation
