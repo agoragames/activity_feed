@@ -87,6 +87,20 @@ describe ActivityFeed::Feed do
     end
   end
 
+  describe '#remove_feeds' do
+    it 'should remove the activity feeds for a given user ID' do
+      add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
+
+      ActivityFeed.total_items_in_feed('david').should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+      ActivityFeed.total_items_in_feed('david', true).should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+
+      ActivityFeed.remove_feeds('david')
+
+      ActivityFeed.total_items_in_feed('david').should == 0
+      ActivityFeed.total_items_in_feed('david', true).should == 0
+    end
+  end
+
   describe '#total_items_in_feed' do
     describe 'without aggregation' do
       it 'should return the correct number of items in the activity feed' do

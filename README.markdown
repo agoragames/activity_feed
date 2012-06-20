@@ -190,6 +190,7 @@ ActivityFeed.feed(user_id, page, aggregate = false)
 ActivityFeed.feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = false)
 ActivityFeed.total_pages_in_feed(user_id, aggregate = false)
 ActivityFeed.total_items_in_feed(user_id, aggregate = false)
+ActivityFeed.remove_feeds(user_id)
 ```
 
 ## Contributing to ActivityFeed
