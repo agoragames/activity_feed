@@ -41,7 +41,7 @@ This option should be set to a Proc that will be called passing the item ID as i
 
 For example:
 
-Assume you have defined a class for your items in Mongoid as follows:
+Assume you have defined a class for storing your activity feed items in Mongoid as follows:
 
 ```ruby
 require 'mongoid'
