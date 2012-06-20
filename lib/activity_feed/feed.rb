@@ -81,5 +81,14 @@ module ActivityFeed
         transaction.del(ActivityFeed.feed_key(user_id, true))
       end
     end
+
+    # Trim an activity feed between two timestamps.
+    #
+    # @param user_id [String] User ID.
+    # @param starting_timestamp [int] Starting timestamp after which activity feed items will be cut.
+    # @param ending_timestamp [int] Ending timestamp before which activity feed items will be cut.
+    def trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = false)
+      ActivityFeed.feederboard_for(user_id, aggregate).remove_members_in_score_range(starting_timestamp, ending_timestamp)
+    end
   end
 end

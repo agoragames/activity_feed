@@ -119,6 +119,52 @@ describe ActivityFeed::Feed do
     end
   end
 
+  describe '#trim_feed' do
+    describe 'without aggregation' do
+      it 'should trim activity feed items between the starting and ending timestamps' do
+        t1 = Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
+        ActivityFeed.update_item('david', 1, DateTime.now.to_i)
+        t2 = Timecop.travel(Time.local(2012, 6, 19, 4, 30, 0))
+        ActivityFeed.update_item('david', 2, DateTime.now.to_i)
+        t3 = Timecop.travel(Time.local(2012, 6, 19, 5, 30, 0))
+        ActivityFeed.update_item('david', 3, DateTime.now.to_i)
+        t4 = Timecop.travel(Time.local(2012, 6, 19, 6, 37, 0))
+        ActivityFeed.update_item('david', 4, DateTime.now.to_i)
+        t5 = Timecop.travel(Time.local(2012, 6, 19, 8, 17, 0))
+        ActivityFeed.update_item('david', 5, DateTime.now.to_i)
+        Timecop.return
+
+        ActivityFeed.trim_feed('david', Time.local(2012, 6, 19, 4, 29, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i)
+        feed = ActivityFeed.feed('david', 1)
+        feed.length.should == 2
+        feed[0].to_i.should == 5
+        feed[1].to_i.should == 1
+      end
+    end
+
+    describe 'with aggregation' do
+      it 'should trim activity feed items between the starting and ending timestamps' do
+        t1 = Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
+        ActivityFeed.update_item('david', 1, DateTime.now.to_i, true)
+        t2 = Timecop.travel(Time.local(2012, 6, 19, 4, 30, 0))
+        ActivityFeed.update_item('david', 2, DateTime.now.to_i, true)
+        t3 = Timecop.travel(Time.local(2012, 6, 19, 5, 30, 0))
+        ActivityFeed.update_item('david', 3, DateTime.now.to_i, true)
+        t4 = Timecop.travel(Time.local(2012, 6, 19, 6, 37, 0))
+        ActivityFeed.update_item('david', 4, DateTime.now.to_i, true)
+        t5 = Timecop.travel(Time.local(2012, 6, 19, 8, 17, 0))
+        ActivityFeed.update_item('david', 5, DateTime.now.to_i, true)
+        Timecop.return
+
+        ActivityFeed.trim_feed('david', Time.local(2012, 6, 19, 4, 29, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
+        feed = ActivityFeed.feed('david', 1, true)
+        feed.length.should == 2
+        feed[0].to_i.should == 5
+        feed[1].to_i.should == 1
+      end
+    end
+  end
+
   describe 'ORM or ODM loading' do
     describe 'ActiveRecord' do
       it 'should be able to load an item via ActiveRecord when requesting a feed' do
