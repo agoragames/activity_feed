@@ -175,7 +175,24 @@ feed = ActivityFeed.feed('david', 1)
  => [#<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000003, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:11:27 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Great activity", text: "Updated some text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>, #<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000004, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Another great activity", text: "This is some other text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>] 
 ```
 
-## Contributing to Activity Feed
+## ActivityFeed method summary
+
+```ruby
+# Item-related
+
+ActivityFeed.update_item(user_id, item_id, timestamp, aggregate = false)
+ActivityFeed.aggregate_item(user_id, item_id, timestamp)
+ActivityFeed.remove_item(user_id, item_id)
+
+# Feed-related
+
+ActivityFeed.feed(user_id, page, aggregate = false)
+ActivityFeed.feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = false)
+ActivityFeed.total_pages_in_feed(user_id, aggregate = false)
+ActivityFeed.total_items_in_feed(user_id, aggregate = false)
+```
+
+## Contributing to ActivityFeed
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
