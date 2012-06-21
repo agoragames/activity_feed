@@ -78,7 +78,7 @@ module ActivityFeed
     # @param user_id [String] User ID.
     def remove_feeds(user_id)
       ActivityFeed.redis.multi do |transaction|
-        transaction.del(ActivityFeed.feed_key(user_id))
+        transaction.del(ActivityFeed.feed_key(user_id, false))
         transaction.del(ActivityFeed.feed_key(user_id, true))
       end
     end
