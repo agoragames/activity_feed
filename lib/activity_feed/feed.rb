@@ -56,6 +56,7 @@ module ActivityFeed
     #
     # @param user_id [String] User ID.
     # @param aggregate [boolean, false] Whether to check the total number of pages in the aggregate activity feed or not.
+    # @param page_size [int, ActivityFeed.page_size] Page size to be used in calculating the total number of pages in the activity feed.
     #
     # @return the total number of pages in the activity feed.
     def total_pages_in_feed(user_id, aggregate = ActivityFeed.aggregate, page_size = ActivityFeed.page_size)
@@ -87,6 +88,7 @@ module ActivityFeed
     # @param user_id [String] User ID.
     # @param starting_timestamp [int] Starting timestamp after which activity feed items will be cut.
     # @param ending_timestamp [int] Ending timestamp before which activity feed items will be cut.
+    # @param aggregate [boolean, false] Whether or not to trim the aggregate activity feed or not.
     def trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
       ActivityFeed.feederboard_for(user_id, aggregate).remove_members_in_score_range(starting_timestamp, ending_timestamp)
     end

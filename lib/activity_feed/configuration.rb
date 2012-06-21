@@ -26,7 +26,7 @@ module ActivityFeed
     #   ActivityFeed.configure do |configuration|
     #     configuration.redis = Redis.new
     #     configuration.namespace = 'activity_feed'
-    #     configuration.aggregate = true
+    #     configuration.aggregate = false
     #     configuration.aggregate_key = 'aggregate'
     #     configuration.page_size = 25
     #   end
@@ -58,13 +58,6 @@ module ActivityFeed
     # Default page size.
     # 
     # @return the page size or the default of 25 if not set.
-    def page_size
-      @page_size ||= 25
-    end
-
-    # Page size to be used when paging through the activity feed.
-    #
-    # @return the page size to be used when paging through the activity feed or the default of 25 if not set.
     def page_size
       @page_size ||= 25
     end

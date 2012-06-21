@@ -27,7 +27,7 @@ require 'activity_feed'
 ActivityFeed.configure do |configuration|
   configuration.redis = Redis.new(:host => '127.0.0.1', :port => 6379)
   configuration.namespace = 'activity_feed'
-  configuration.aggregate = true
+  configuration.aggregate = false
   configuration.aggregate_key = 'aggregate'
   configuration.page_size = 25
 end
@@ -144,7 +144,7 @@ require 'activity_feed'
 ActivityFeed.configure do |configuration|
   configuration.redis = Redis.new(:host => '127.0.0.1', :port => 6379)
   configuration.namespace = 'activity_feed'
-  configuration.aggregate = true
+  configuration.aggregate = false
   configuration.aggregate_key = 'aggregate'
   configuration.page_size = 25
   configuration.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
