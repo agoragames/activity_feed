@@ -89,7 +89,9 @@ ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) 
 
 ## Usage
 
-Attached is a complete example using Mongoid as our persistent storage for activity feed items.
+### Developing an Activity Feed for an Individual
+
+Below is a complete example using Mongoid as our persistent storage for activity feed items.
 The example uses callbacks to update and remove items from the activity feed. As this example 
 uses the `updated_at` time of the item, updated items will "bubble up" to the top of the 
 activity feed.
@@ -181,6 +183,95 @@ activity_item_1.save
 feed = ActivityFeed.feed('david', 1)
  => [#<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000003, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:11:27 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Great activity", text: "Updated some text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>, #<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000004, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Another great activity", text: "This is some other text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>] 
 ```
+
+### Developing an Aggregate Activity Feed for an Individual
+
+```ruby
+# Configure Mongoid
+require 'mongoid'
+
+Mongoid.configure do |config|
+  config.master = Mongo::Connection.new.db("activity_feed_gem_test")
+end
+
+# Create a class for activity feed items
+module ActivityFeed
+  module Mongoid
+    class Item
+      include ::Mongoid::Document    
+      include ::Mongoid::Timestamps
+
+      field :user_id, type: String
+      validates_presence_of :user_id
+
+      field :text, type: String
+
+      after_save :update_item_in_activity_feed
+      after_destroy :remove_item_from_activity_feed
+
+      private
+
+      def update_item_in_activity_feed
+        ActivityFeed.update_item(self.user_id, self.id, self.updated_at.to_i)
+      end
+
+      def remove_item_from_activity_feed
+        ActivityFeed.remove_item(self.user_id, self.id)
+      end
+    end
+  end
+end
+
+# Configure ActivityFeed
+require 'activity_feed'
+
+ActivityFeed.configure do |configuration|
+  configuration.redis = Redis.new(:host => '127.0.0.1', :port => 6379)
+  configuration.namespace = 'activity_feed'
+  configuration.aggregate = true
+  configuration.aggregate_key = 'aggregate'
+  configuration.page_size = 25
+  configuration.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+end
+
+# Create activity feed items for a couple of users and aggregate the activity feed items from the second user in the first user's activity feed
+1.upto(5) do |index|
+  ActivityFeed::Mongoid::Item.create(
+    :user_id => 'david',
+    :text => "This is from david's activity feed"
+  )
+
+  sleep(1) # Sleep a little so we make sure to have unique timestamps between activity feed items
+
+  another_item = ActivityFeed::Mongoid::Item.create(
+    :user_id => 'unknown',
+    :text => "This is from unknown's activity feed"
+  )
+
+  sleep(1) 
+
+  ActivityFeed.aggregate_item('david', another_item.id, another_item.updated_at.to_i)
+end
+
+# Pull up the aggregate activity feed
+pp feed = ActivityFeed.feed('david', 1, true)
+  [#<ActivityFeed::Mongoid::Item _id: 4fe289248bb895b79500000a, _type: nil, created_at: 2012-06-21 02:38:28 UTC, updated_at: 2012-06-21 02:38:28 UTC, user_id: "unknown", text: "This is from unknown's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe289238bb895b795000009, _type: nil, created_at: 2012-06-21 02:38:27 UTC, updated_at: 2012-06-21 02:38:27 UTC, user_id: "david", text: "This is from david's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe289228bb895b795000008, _type: nil, created_at: 2012-06-21 02:38:26 UTC, updated_at: 2012-06-21 02:38:26 UTC, user_id: "unknown", text: "This is from unknown's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe289218bb895b795000007, _type: nil, created_at: 2012-06-21 02:38:25 UTC, updated_at: 2012-06-21 02:38:25 UTC, user_id: "david", text: "This is from david's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe289208bb895b795000006, _type: nil, created_at: 2012-06-21 02:38:24 UTC, updated_at: 2012-06-21 02:38:24 UTC, user_id: "unknown", text: "This is from unknown's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe2891f8bb895b795000005, _type: nil, created_at: 2012-06-21 02:38:23 UTC, updated_at: 2012-06-21 02:38:23 UTC, user_id: "david", text: "This is from david's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe2891e8bb895b795000004, _type: nil, created_at: 2012-06-21 02:38:22 UTC, updated_at: 2012-06-21 02:38:22 UTC, user_id: "unknown", text: "This is from unknown's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe2891d8bb895b795000003, _type: nil, created_at: 2012-06-21 02:38:21 UTC, updated_at: 2012-06-21 02:38:21 UTC, user_id: "david", text: "This is from david's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe2891c8bb895b795000002, _type: nil, created_at: 2012-06-21 02:38:20 UTC, updated_at: 2012-06-21 02:38:20 UTC, user_id: "unknown", text: "This is from unknown's activity feed">,
+   #<ActivityFeed::Mongoid::Item _id: 4fe2891b8bb895b795000001, _type: nil, created_at: 2012-06-21 02:38:19 UTC, updated_at: 2012-06-21 02:38:19 UTC, user_id: "david", text: "This is from david's activity feed">]
+```
+
+## ActivityFeed Caveats
+
+`ActivityFeed.remove_item` can ONLY remove items from a single user's activity feed. If you allow activity feed 
+items to be deleted from a user's activity feed, you will need to propagate that delete out to all the other 
+feeds in which that activity feed item may have been aggregated.
 
 ## ActivityFeed method summary
 
