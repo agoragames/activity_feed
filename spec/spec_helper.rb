@@ -10,16 +10,17 @@ RSpec.configure do |config|
   config.before(:all) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
-
-    ActivityFeed.configure do |configuration|
-      configuration.item_loader = nil
-      configuration.redis = Redis.new(:db => 15)
-    end
   end
 
   config.before(:each) do
     DatabaseCleaner.start
     DatabaseCleaner.clean
+
+    ActivityFeed.configure do |configuration|
+      configuration.item_loader = nil
+      configuration.item_loader_exception_handler = nil
+      configuration.redis = Redis.new(:db => 15)
+    end
 
     ActivityFeed.redis.flushdb
   end
@@ -27,7 +28,6 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean    
 
-    ActivityFeed.redis.flushdb
     ActivityFeed.redis.quit
   end
 

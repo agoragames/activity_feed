@@ -11,18 +11,23 @@ module ActivityFeed
     # 
     # @return page from the activity feed for a given +user_id+.
     def feed(user_id, page, aggregate = ActivityFeed.aggregate)
-      feed_items = []
-
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
-      feederboard.members(page, :page_size => ActivityFeed.page_size).each do |feed_item|
-        if ActivityFeed.item_loader
-          feed_items << ActivityFeed.item_loader.call(feed_item[:member])
+      feed = feederboard.members(page, :page_size => ActivityFeed.page_size).inject([]) do |feed_items, feed_item|
+        item = if ActivityFeed.item_loader
+          begin
+            ActivityFeed.item_loader.call(feed_item[:member])
+          rescue => e
+            ActivityFeed.item_loader_exception_handler.call(e, feed_item[:member]) if ActivityFeed.item_loader_exception_handler
+          end
         else
-          feed_items << feed_item[:member]
+          feed_item[:member]
         end
+
+        feed_items << item unless item.nil?
+        feed_items
       end
 
-      feed_items
+      feed.nil? ? [] : feed
     end
 
     # Retrieve a page from the activity feed for a given +user_id+ between a 
@@ -38,18 +43,22 @@ module ActivityFeed
     # 
     # @return feed items from the activity feed for a given +user_id+ between the +starting_timestamp+ and +ending_timestamp+.
     def feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
-      feed_items = []
-
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
-      feederboard.members_from_score_range(starting_timestamp, ending_timestamp).each do |feed_item|
-        if ActivityFeed.item_loader
-          feed_items << ActivityFeed.item_loader.call(feed_item[:member])
+      feed = feederboard.members_from_score_range(starting_timestamp, ending_timestamp).inject([]) do |feed_items, feed_item|
+        item = if ActivityFeed.item_loader
+          begin
+            ActivityFeed.item_loader.call(feed_item[:member])
+          rescue => e
+            ActivityFeed.item_loader_exception_handler.call(e, feed_item[:member]) if ActivityFeed.item_loader_exception_handler
+          end
         else
-          feed_items << feed_item[:member]
+          feed_item[:member]
         end
+
+        feed_items << item unless item.nil?
       end
 
-      feed_items
+      feed.nil? ? [] : feed
     end
 
     # Return the total number of pages in the activity feed.

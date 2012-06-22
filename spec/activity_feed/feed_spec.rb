@@ -216,5 +216,47 @@ describe ActivityFeed::Feed do
         feed[0].should == item
       end
     end
+
+    describe 'item_loader_exception_handler' do
+      it 'should call the item_loader_exception_handler if it is set and there is an exception loading an activity feed item' do
+        ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+        ActivityFeed.item_loader_exception_handler = Proc.new { |exception, id| nil }
+        ActivityFeed.item_loader_exception_handler.should_receive(:call)
+
+        ActivityFeed.update_item('david', '4fe4c5f3421aa9b89c000001', Time.now.to_i, false)
+        feed = ActivityFeed.feed('david', 1)
+        feed.length.should == 0
+      end
+
+      it 'should still load an activity feed, but call the item_loader_exception_handler if it is set and there is an exception loading an activity feed item' do
+        ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+        ActivityFeed.item_loader_exception_handler = Proc.new { |exception, id| nil }
+        ActivityFeed.item_loader_exception_handler.should_receive(:call)
+
+        item = ActivityFeed::Mongoid::Item.create(
+          :user_id => 'david', 
+          :nickname => 'David Czarnecki',
+          :type => 'some_activity',
+          :title => 'Great activity',
+          :text => 'This is text for the feed item',
+          :url => 'http://url.com'
+        )
+
+        ActivityFeed.update_item('david', '4fe4c5f3421aa9b89c000001', DateTime.now.to_i)
+
+        another_item = ActivityFeed::Mongoid::Item.create(
+          :user_id => 'david', 
+          :nickname => 'David Czarnecki',
+          :type => 'some_activity',
+          :title => 'Great activity',
+          :text => 'This is more text for the feed item',
+          :url => 'http://url.com'
+        )
+
+        feed = ActivityFeed.feed('david', 1)
+
+        feed.length.should == 2
+      end
+    end
   end
 end
