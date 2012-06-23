@@ -1,6 +1,7 @@
 # ActivityFeed
 
-Activity feeds backed by Redis
+Activity feeds backed by Redis. Activity feeds may also be referred to as timelines or 
+news feeds.
 
 ## Compatibility
 
