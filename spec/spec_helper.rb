@@ -18,7 +18,6 @@ RSpec.configure do |config|
 
     ActivityFeed.configure do |configuration|
       configuration.item_loader = nil
-      configuration.item_loader_exception_handler = nil
       configuration.redis = Redis.new(:db => 15)
     end
 

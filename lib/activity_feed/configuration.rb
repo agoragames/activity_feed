@@ -7,9 +7,6 @@ module ActivityFeed
     # Proc that will be called for loading an item from an ORM (e.g. ActiveRecord) or ODM (e.g. Mongoid). Proc will be called with the ID of the item from the feed.
     attr_accessor :item_loader
 
-    # Proc that will be called if there is an exception loading an item from an ORM (e.g. ActiveRecord) or ODM (e.g. Mongoid). Proc will be called with the exception and the ID of item from the feed.
-    attr_accessor :item_loader_exception_handler
-
     # ActivityFeed namespace for Redis.
     attr_writer :namespace
 

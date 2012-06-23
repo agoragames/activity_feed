@@ -87,6 +87,8 @@ You would add the following option where you are configuring ActivityFeed as fol
 ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
 ```
 
+If you need to handle any exceptions when loading activity feed items, please do this in the Proc.
+
 ## Usage
 
 ### Developing an Activity Feed for an Individual

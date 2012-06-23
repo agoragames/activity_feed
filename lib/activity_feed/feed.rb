@@ -14,11 +14,7 @@ module ActivityFeed
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
       feed = feederboard.members(page, :page_size => ActivityFeed.page_size).inject([]) do |feed_items, feed_item|
         item = if ActivityFeed.item_loader
-          begin
-            ActivityFeed.item_loader.call(feed_item[:member])
-          rescue => e
-            ActivityFeed.item_loader_exception_handler.call(e, feed_item[:member]) if ActivityFeed.item_loader_exception_handler
-          end
+          ActivityFeed.item_loader.call(feed_item[:member])
         else
           feed_item[:member]
         end
@@ -46,16 +42,13 @@ module ActivityFeed
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
       feed = feederboard.members_from_score_range(starting_timestamp, ending_timestamp).inject([]) do |feed_items, feed_item|
         item = if ActivityFeed.item_loader
-          begin
-            ActivityFeed.item_loader.call(feed_item[:member])
-          rescue => e
-            ActivityFeed.item_loader_exception_handler.call(e, feed_item[:member]) if ActivityFeed.item_loader_exception_handler
-          end
+          ActivityFeed.item_loader.call(feed_item[:member])
         else
           feed_item[:member]
         end
 
         feed_items << item unless item.nil?
+        feed_items
       end
 
       feed.nil? ? [] : feed
