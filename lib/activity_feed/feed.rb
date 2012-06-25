@@ -12,7 +12,7 @@ module ActivityFeed
     # @return page from the activity feed for a given +user_id+.
     def feed(user_id, page, aggregate = ActivityFeed.aggregate)
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
-      feed = feederboard.members(page, :page_size => ActivityFeed.page_size).inject([]) do |feed_items, feed_item|
+      feed = feederboard.leaders(page, :page_size => ActivityFeed.page_size).inject([]) do |feed_items, feed_item|
         item = if ActivityFeed.item_loader
           ActivityFeed.item_loader.call(feed_item[:member])
         else
