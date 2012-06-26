@@ -1,82 +1,44 @@
-require 'rubygems'
-require 'rspec'
-require 'redis'
-require 'mongo_mapper'
-require 'mongoid'
-require 'database_cleaner'
-require 'fabrication'
-require 'json'
-
-$redis = Redis.new(:host => '127.0.0.1', :port => 6379)
-
-# TODO: Move to spec/mongo_mapper
-MongoMapper.connection = Mongo::Connection.new('localhost', 27017)
-MongoMapper.database = 'activity_feed_gem_test_mongo_mapper'
-
-Mongoid.configure do |config|
-  config.master = Mongo::Connection.new.db("activity_feed_gem_test_mongoid")
-  # config.mongoid.logger = false
-end
-
-# TODO: Move to spec/active_record
-require 'active_record'
-
-ActiveRecord::Base.establish_connection(
-  :adapter => "sqlite3",
-  :database => ":memory:"
-)
-
-ActiveRecord::Migration.verbose = false
-
-ActiveRecord::Schema.define do
-  create_table :activity_feed_items, :force => true do |t|
-    t.integer :user_id
-    t.string :nickname
-    t.string :type
-    t.string :title
-    t.text :text
-    t.string :url
-    t.string :icon
-    t.boolean :sticky
-    
-    t.timestamps
-  end
-
-  add_index :activity_feed_items, :user_id
-end
-
-DatabaseCleaner[:active_record].strategy = :transaction
-DatabaseCleaner[:mongo_mapper].strategy = :truncation
-DatabaseCleaner[:mongoid].strategy = :truncation
-
 require 'activity_feed'
-
-ActivityFeed.redis = $redis
-
-require 'activity_feed/active_record/item'
-require 'activity_feed/memory/item'
-require 'activity_feed/mongo_mapper/item'
-require 'activity_feed/mongoid/item'
-require 'activity_feed/ohm/item'
-require 'activity_feed/custom/item'
+require 'timecop'
+require 'database_cleaner'
+require 'support/mongoid'
+require 'support/active_record'
 
 RSpec.configure do |config|
   config.mock_with :rspec
   
-  config.before(:suite) do
+  config.before(:all) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
-    $redis.flushdb
   end
 
   config.before(:each) do
-    ActivityFeed.persistence = :memory
     DatabaseCleaner.start
     DatabaseCleaner.clean
+
+    ActivityFeed.configure do |configuration|
+      configuration.item_loader = nil
+      configuration.redis = Redis.new(:db => 15)
+    end
+
+    ActivityFeed.redis.flushdb
   end
 
   config.after(:each) do
-    DatabaseCleaner.clean
-    $redis.flushdb
-  end  
+    DatabaseCleaner.clean    
+
+    ActivityFeed.redis.quit
+  end
+
+  # Helper method to add items to a given feed.
+  # 
+  # @param items_to_add [int] Number of items to add to the feed.
+  def add_items_to_feed(user_id, items_to_add = 5, aggregate = ActivityFeed.aggregate)
+    1.upto(items_to_add) do |index|
+      ActivityFeed.update_item(user_id, index, DateTime.now.to_i, aggregate)
+      Timecop.travel(DateTime.now + 10)
+    end
+
+    Timecop.return
+  end
 end
