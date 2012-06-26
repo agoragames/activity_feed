@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.0.0
+
+* Rewrite of the activity_feed gem
+* Simplifies namespace in Redis
+* Simplifies code to manipulate items and feeds
+* Removes explicit ORM/ODM support and delegates that to `item_loader` if necessary
+* Adds internal code documentation
+
 ## 1.4.0
 
 * Added support for [Mongoid](http://www.mongoid.org)
