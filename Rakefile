@@ -11,3 +11,7 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
 end
 
 task :default  => :spec
+
+task :test_rubies do
+  system "rvm ruby-1.8.7@activity_feed_gem,ruby-1.9.3@activity_feed_gem do rake spec"
+end

@@ -21,26 +21,20 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency('rake')
   s.add_development_dependency('rspec')
-  s.add_development_dependency('database_cleaner')
-  s.add_development_dependency('fabrication')
-  
+  s.add_development_dependency('activesupport')
+  s.add_development_dependency('timecop')
+
   s.add_development_dependency('mongoid')
-  s.add_development_dependency('mongo_mapper')
-  s.add_development_dependency('mongo_ext')
   s.add_development_dependency('bson_ext')
-  
+
   s.add_development_dependency('activerecord')
   s.add_development_dependency('sqlite3')
   
-  s.add_development_dependency('ohm')
-  s.add_development_dependency('ohm-contrib')
+  s.add_development_dependency('database_cleaner')
 
-  s.add_development_dependency('timecop')
+  if '1.8.7'.eql?(RUBY_VERSION)
+    s.add_development_dependency('SystemTimer')
+  end
    
-  s.add_dependency('activesupport')
-  s.add_dependency('i18n')
-  
-  s.add_dependency('json')
-  s.add_dependency('redis')
   s.add_dependency('leaderboard')
 end
