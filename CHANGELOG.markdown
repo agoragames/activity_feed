@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2.0.0
+## 2.0.0 (2012-06-29)
 
 * Rewrite of the activity_feed gem
 * Simplifies namespace in Redis
