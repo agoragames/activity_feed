@@ -1,14 +1,14 @@
 module ActivityFeed
   module Feed
-    # Retrieve a page from the activity feed for a given +user_id+. You can configure 
-    # +ActivityFeed.item_loader+ with a Proc to retrieve an item from, for example, 
-    # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the page 
+    # Retrieve a page from the activity feed for a given +user_id+. You can configure
+    # +ActivityFeed.item_loader+ with a Proc to retrieve an item from, for example,
+    # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the page
     # returned with loaded items rather than item IDs.
     #
     # @param user_id [String] User ID.
     # @param page [int] Page in the feed to be retrieved.
     # @param aggregate [boolean, false] Whether to retrieve the aggregate feed for +user_id+.
-    # 
+    #
     # @return page from the activity feed for a given +user_id+.
     def feed(user_id, page, aggregate = ActivityFeed.aggregate)
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
@@ -26,17 +26,42 @@ module ActivityFeed
       feed.nil? ? [] : feed
     end
 
-    # Retrieve a page from the activity feed for a given +user_id+ between a 
-    # +starting_timestamp+ and an +ending_timestamp+. You can configure 
-    # +ActivityFeed.item_loader+ with a Proc to retrieve an item from, for example, 
-    # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the feed data  
+    # Retrieve the entire activity feed for a given +user_id+. You can configure
+    # +ActivityFeed.item_loader+ with a Proc to retrieve an item from, for example,
+    # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the page
+    # returned with loaded items rather than item IDs.
+    #
+    # @param user_id [String] User ID.
+    # @param aggregate [boolean, false] Whether to retrieve the aggregate feed for +user_id+.
+    #
+    # @return the full activity feed for a given +user_id+.
+    def full_feed(user_id, aggregate = ActivityFeed.aggregate)
+      feederboard = ActivityFeed.feederboard_for(user_id, aggregate)
+      feed = feederboard.leaders(1, :page_size => feederboard.total_members).inject([]) do |feed_items, feed_item|
+        item = if ActivityFeed.item_loader
+          ActivityFeed.item_loader.call(feed_item[:member])
+        else
+          feed_item[:member]
+        end
+
+        feed_items << item unless item.nil?
+        feed_items
+      end
+
+      feed.nil? ? [] : feed
+    end
+
+    # Retrieve a page from the activity feed for a given +user_id+ between a
+    # +starting_timestamp+ and an +ending_timestamp+. You can configure
+    # +ActivityFeed.item_loader+ with a Proc to retrieve an item from, for example,
+    # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the feed data
     # returned with loaded items rather than item IDs.
     #
     # @param user_id [String] User ID.
     # @param starting_timestamp [int] Starting timestamp between which items in the feed are to be retrieved.
     # @param ending_timestamp [int] Ending timestamp between which items in the feed are to be retrieved.
     # @param aggregate [boolean, false] Whether to retrieve items from the aggregate feed for +user_id+.
-    # 
+    #
     # @return feed items from the activity feed for a given +user_id+ between the +starting_timestamp+ and +ending_timestamp+.
     def feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
       feederboard = ActivityFeed.feederboard_for(user_id, aggregate)

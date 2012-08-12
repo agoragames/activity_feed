@@ -25,6 +25,30 @@ describe ActivityFeed::Feed do
     end
   end
 
+  describe '#full_feed' do
+    describe 'without aggregation' do
+      it 'should return the full activity feed' do
+        add_items_to_feed('david', 30)
+
+        feed = ActivityFeed.full_feed('david', false)
+        feed.length.should == 30
+        feed[0].to_i.should == 30
+        feed[29].to_i.should == 1
+      end
+    end
+
+    describe 'with aggregation' do
+      it 'should return the full activity feed' do
+        add_items_to_feed('david', 30, true)
+
+        feed = ActivityFeed.full_feed('david', true)
+        feed.length.should == 30
+        feed[0].to_i.should == 30
+        feed[29].to_i.should == 1
+      end
+    end
+  end
+
   describe '#feed_between_timestamps' do
     describe 'without aggregation' do
       it 'should return activity feed items between the starting and ending timestamps' do
@@ -176,15 +200,15 @@ describe ActivityFeed::Feed do
   describe 'ORM or ODM loading' do
     describe 'ActiveRecord' do
       it 'should be able to load an item via ActiveRecord when requesting a feed' do
-        ActivityFeed.item_loader = Proc.new do |id| 
+        ActivityFeed.item_loader = Proc.new do |id|
           ActivityFeed::ActiveRecord::Item.find(id)
         end
-      
+
         feed = ActivityFeed.feed('david', 1)
         feed.length.should == 0
 
         item = ActivityFeed::ActiveRecord::Item.create(
-          :user_id => 'david', 
+          :user_id => 'david',
           :nickname => 'David Czarnecki',
           :type => 'some_activity',
           :title => 'Great activity',
@@ -200,12 +224,12 @@ describe ActivityFeed::Feed do
     describe 'Mongoid' do
       it 'should be able to load an item via Mongoid when requesting a feed' do
         ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
-      
+
         feed = ActivityFeed.feed('david', 1)
         feed.length.should == 0
 
         item = ActivityFeed::Mongoid::Item.create(
-          :user_id => 'david', 
+          :user_id => 'david',
           :nickname => 'David Czarnecki',
           :type => 'some_activity',
           :title => 'Great activity',
@@ -242,7 +266,7 @@ describe ActivityFeed::Feed do
         end
 
         item = ActivityFeed::Mongoid::Item.create(
-          :user_id => 'david', 
+          :user_id => 'david',
           :nickname => 'David Czarnecki',
           :type => 'some_activity',
           :title => 'Great activity',
@@ -253,7 +277,7 @@ describe ActivityFeed::Feed do
         ActivityFeed.update_item('david', '4fe4c5f3421aa9b89c000001', DateTime.now.to_i)
 
         another_item = ActivityFeed::Mongoid::Item.create(
-          :user_id => 'david', 
+          :user_id => 'david',
           :nickname => 'David Czarnecki',
           :type => 'some_activity',
           :title => 'Great activity',
