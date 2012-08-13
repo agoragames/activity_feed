@@ -5,12 +5,17 @@ Mongoid.configure do |config|
   config.master = Mongo::Connection.new.db("activity_feed_gem_test")
 end
 
+# Mongoid 3.x
+# Mongoid.configure do |config|
+#   config.connect_to('activity_feed_gem_test')
+# end
+
 DatabaseCleaner[:mongoid].strategy = :truncation
 
 module ActivityFeed
   module Mongoid
     class Item
-      include ::Mongoid::Document    
+      include ::Mongoid::Document
       include ::Mongoid::Timestamps
 
       field :user_id, :type => String
@@ -25,6 +30,8 @@ module ActivityFeed
       field :sticky, :type=> Boolean
 
       index :user_id
+      # Mongoid 3.x
+      # index(user_id: 1)
 
       after_save :update_activity_feed
 
