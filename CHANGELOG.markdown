@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.0 (2012-08-13)
+
+* Added `full_feed(user_id, aggregate = ActivityFeed.aggregate)` method to be able to retrieve an entire activity feed
+
 ## 2.0.0 (2012-06-29)
 
 * Rewrite of the activity_feed gem
