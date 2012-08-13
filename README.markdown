@@ -1,6 +1,6 @@
 # ActivityFeed
 
-Activity feeds backed by Redis. Activity feeds may also be referred to as timelines or 
+Activity feeds backed by Redis. Activity feeds may also be referred to as timelines or
 news feeds.
 
 ## Compatibility
@@ -15,7 +15,7 @@ or:
 
 `gem 'activity_feed'`
 
-Make sure your redis server is running! Redis configuration is outside the scope of this README, but 
+Make sure your redis server is running! Redis configuration is outside the scope of this README, but
 check out the [Redis documentation](http://redis.io/documentation).
 
 ## Configuration
@@ -54,7 +54,7 @@ require 'mongoid'
 module ActivityFeed
   module Mongoid
     class Item
-      include ::Mongoid::Document    
+      include ::Mongoid::Document
       include ::Mongoid::Timestamps
 
       field :user_id, type: String
@@ -70,7 +70,7 @@ module ActivityFeed
 
       index :user_id
 
-      after_save :update_item_in_activity_feed    
+      after_save :update_item_in_activity_feed
 
       private
 
@@ -95,8 +95,8 @@ If you need to handle any exceptions when loading activity feed items, please do
 ### Developing an Activity Feed for an Individual
 
 Below is a complete example using Mongoid as our persistent storage for activity feed items.
-The example uses callbacks to update and remove items from the activity feed. As this example 
-uses the `updated_at` time of the item, updated items will "bubble up" to the top of the 
+The example uses callbacks to update and remove items from the activity feed. As this example
+uses the `updated_at` time of the item, updated items will "bubble up" to the top of the
 activity feed.
 
 ```ruby
@@ -111,7 +111,7 @@ end
 module ActivityFeed
   module Mongoid
     class Item
-      include ::Mongoid::Document    
+      include ::Mongoid::Document
       include ::Mongoid::Timestamps
 
       field :user_id, type: String
@@ -157,7 +157,7 @@ end
 
 # Create a couple of activity feed items
 activity_item_1 = ActivityFeed::Mongoid::Item.create(
-  :user_id => 'david', 
+  :user_id => 'david',
   :nickname => 'David Czarnecki',
   :type => 'some_activity',
   :title => 'Great activity',
@@ -166,7 +166,7 @@ activity_item_1 = ActivityFeed::Mongoid::Item.create(
 )
 
 activity_item_2 = ActivityFeed::Mongoid::Item.create(
-  :user_id => 'david', 
+  :user_id => 'david',
   :nickname => 'David Czarnecki',
   :type => 'some_activity',
   :title => 'Another great activity',
@@ -176,7 +176,7 @@ activity_item_2 = ActivityFeed::Mongoid::Item.create(
 
 # Pull up the activity feed
 feed = ActivityFeed.feed('david', 1)
- => [#<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000004, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Another great activity", text: "This is some other text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>, #<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000003, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Great activity", text: "This is text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>] 
+ => [#<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000004, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Another great activity", text: "This is some other text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>, #<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000003, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Great activity", text: "This is text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>]
 
 # Update an actitivity feed item
 activity_item_1.text = 'Updated some text for the activity feed item'
@@ -184,7 +184,7 @@ activity_item_1.save
 
 # Pull up the activity feed item and notice that the item you updated has "bubbled up" to the top of the feed
 feed = ActivityFeed.feed('david', 1)
- => [#<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000003, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:11:27 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Great activity", text: "Updated some text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>, #<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000004, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Another great activity", text: "This is some other text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>] 
+ => [#<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000003, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:11:27 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Great activity", text: "Updated some text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>, #<ActivityFeed::Mongoid::Item _id: 4fe0ce26421aa91fc2000004, _type: nil, created_at: 2012-06-19 19:08:22 UTC, updated_at: 2012-06-19 19:08:22 UTC, user_id: "david", nickname: "David Czarnecki", type: "some_activity", title: "Another great activity", text: "This is some other text for the activity feed item", url: "http://url.com", icon: nil, sticky: nil>]
 ```
 
 ### Developing an Aggregate Activity Feed for an Individual
@@ -201,7 +201,7 @@ end
 module ActivityFeed
   module Mongoid
     class Item
-      include ::Mongoid::Document    
+      include ::Mongoid::Document
       include ::Mongoid::Timestamps
 
       field :user_id, type: String
@@ -251,7 +251,7 @@ end
     :text => "This is from unknown's activity feed"
   )
 
-  sleep(1) 
+  sleep(1)
 
   ActivityFeed.aggregate_item('david', another_item.id, another_item.updated_at.to_i)
 end
@@ -272,8 +272,8 @@ pp feed = ActivityFeed.feed('david', 1, true)
 
 ## ActivityFeed Caveats
 
-`ActivityFeed.remove_item` can ONLY remove items from a single user's activity feed. If you allow activity feed 
-items to be deleted from a user's activity feed, you will need to propagate that delete out to all the other 
+`ActivityFeed.remove_item` can ONLY remove items from a single user's activity feed. If you allow activity feed
+items to be deleted from a user's activity feed, you will need to propagate that delete out to all the other
 feeds in which that activity feed item may have been aggregated.
 
 ## ActivityFeed method summary
@@ -288,6 +288,7 @@ ActivityFeed.remove_item(user_id, item_id)
 # Feed-related
 
 ActivityFeed.feed(user_id, page, aggregate = ActivityFeed.aggregate)
+ActivityFeed.full_feed(user_id, aggregate = ActivityFeed.aggregate)
 ActivityFeed.feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
 ActivityFeed.total_pages_in_feed(user_id, aggregate = ActivityFeed.aggregate, page_size = ActivityFeed.page_size)
 ActivityFeed.total_items_in_feed(user_id, aggregate = ActivityFeed.aggregate)
