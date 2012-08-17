@@ -293,6 +293,8 @@ ActivityFeed.feed_between_timestamps(user_id, starting_timestamp, ending_timesta
 ActivityFeed.total_pages_in_feed(user_id, aggregate = ActivityFeed.aggregate, page_size = ActivityFeed.page_size)
 ActivityFeed.total_items_in_feed(user_id, aggregate = ActivityFeed.aggregate)
 ActivityFeed.trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
+ActivityFeed.expire_feed(user_id, seconds, aggregate = ActivityFeed.aggregate)
+ActivityFeed.expire_feed_at(user_id, timestamp, aggregate = ActivityFeed.aggregate)
 ActivityFeed.remove_feeds(user_id)
 ```
 
