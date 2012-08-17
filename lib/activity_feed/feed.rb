@@ -119,5 +119,23 @@ module ActivityFeed
     def trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
       ActivityFeed.feederboard_for(user_id, aggregate).remove_members_in_score_range(starting_timestamp, ending_timestamp)
     end
+
+    # Expire an activity feed after a set number of seconds.
+    #
+    # @param user_id [String] User ID.
+    # @param seconds [int] Number of seconds after which the activity feed will be expired.
+    # @param aggregate [boolean, false] Whether or not to expire the aggregate activity feed or not.
+    def expire_feed(user_id, seconds, aggregate = ActivityFeed.aggregate)
+      ActivityFeed.redis.expire(ActivityFeed.feed_key(user_id, aggregate), seconds)
+    end
+
+    # Expire an activity feed at a given timestamp.
+    #
+    # @param user_id [String] User ID.
+    # @param timestamp [int] Timestamp after which the activity feed will be expired.
+    # @param aggregate [boolean, false] Whether or not to expire the aggregate activity feed or not.
+    def expire_feed_at(user_id, timestamp, aggregate = ActivityFeed.aggregate)
+      ActivityFeed.redis.expireat(ActivityFeed.feed_key(user_id, aggregate), timestamp)
+    end
   end
 end
