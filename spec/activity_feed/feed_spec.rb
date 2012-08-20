@@ -242,52 +242,28 @@ describe ActivityFeed::Feed do
         feed[0].should == item
       end
     end
+  end
 
-    describe 'item_loader exception handling' do
-      it 'should call the item_loader_exception_handler if it is set and there is an exception loading an activity feed item' do
-        ActivityFeed.item_loader = Proc.new do |id|
-          begin
-            ActivityFeed::Mongoid::Item.find(id)
-          rescue Mongoid::Errors::DocumentNotFound
-          end
-        end
+  describe '#expire_feed' do
+    it 'should set an expiration on an activity feed' do
+      add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE)
 
-        ActivityFeed.update_item('david', '4fe4c5f3421aa9b89c000001', Time.now.to_i, false)
-        feed = ActivityFeed.feed('david', 1)
-        feed.length.should == 0
+      ActivityFeed.expire_feed('david', 10)    
+      ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
+        ttl.should be > 1
+        ttl.should be <= 10
       end
+    end
+  end
 
-      it 'should still load an activity feed, but call the item_loader_exception_handler if it is set and there is an exception loading an activity feed item' do
-        ActivityFeed.item_loader = Proc.new do |id|
-          begin
-            ActivityFeed::Mongoid::Item.find(id)
-          rescue Mongoid::Errors::DocumentNotFound
-          end
-        end
+  describe '#expire_feed_at' do
+    it 'should set an expiration timestamp on an activity feed' do
+      add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE)
 
-        item = ActivityFeed::Mongoid::Item.create(
-          :user_id => 'david',
-          :nickname => 'David Czarnecki',
-          :type => 'some_activity',
-          :title => 'Great activity',
-          :text => 'This is text for the feed item',
-          :url => 'http://url.com'
-        )
-
-        ActivityFeed.update_item('david', '4fe4c5f3421aa9b89c000001', DateTime.now.to_i)
-
-        another_item = ActivityFeed::Mongoid::Item.create(
-          :user_id => 'david',
-          :nickname => 'David Czarnecki',
-          :type => 'some_activity',
-          :title => 'Great activity',
-          :text => 'This is more text for the feed item',
-          :url => 'http://url.com'
-        )
-
-        feed = ActivityFeed.feed('david', 1)
-
-        feed.length.should == 2
+      ActivityFeed.expire_feed_at('david', (Time.now + 10).to_i)
+      ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
+        ttl.should be > 1
+        ttl.should be <= 10
       end
     end
   end
