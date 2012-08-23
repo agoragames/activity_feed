@@ -93,12 +93,13 @@ describe ActivityFeed::Feed do
     end
   end
 
-  describe '#total_pages_in_feed' do
+  describe '#total_pages_in_feed and #total_pages' do
     describe 'without aggregation' do
       it 'should return the correct number of pages in the activity feed' do
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1)
 
         ActivityFeed.total_pages_in_feed('david').should == 2
+        ActivityFeed.total_pages('david').should == 2
       end
     end
 
@@ -107,6 +108,7 @@ describe ActivityFeed::Feed do
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
 
         ActivityFeed.total_pages_in_feed('david', true).should == 2
+        ActivityFeed.total_pages('david', true).should == 2
       end
     end
 
@@ -115,6 +117,7 @@ describe ActivityFeed::Feed do
         add_items_to_feed('david', 25)
 
         ActivityFeed.total_pages_in_feed('david', false, 4).should == 7
+        ActivityFeed.total_pages('david', false, 4).should == 7
       end
     end
   end
@@ -133,12 +136,13 @@ describe ActivityFeed::Feed do
     end
   end
 
-  describe '#total_items_in_feed' do
+  describe '#total_items_in_feed and #total_items' do
     describe 'without aggregation' do
       it 'should return the correct number of items in the activity feed' do
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1)
 
         ActivityFeed.total_items_in_feed('david').should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+        ActivityFeed.total_items('david').should == Leaderboard::DEFAULT_PAGE_SIZE + 1
       end
     end
 
@@ -147,6 +151,7 @@ describe ActivityFeed::Feed do
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
 
         ActivityFeed.total_items_in_feed('david', true).should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+        ActivityFeed.total_items('david', true).should == Leaderboard::DEFAULT_PAGE_SIZE + 1
       end
     end
   end
@@ -248,7 +253,7 @@ describe ActivityFeed::Feed do
     it 'should set an expiration on an activity feed' do
       add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE)
 
-      ActivityFeed.expire_feed('david', 10)    
+      ActivityFeed.expire_feed('david', 10)
       ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
         ttl.should be > 1
         ttl.should be <= 10
