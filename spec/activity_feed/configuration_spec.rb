@@ -7,7 +7,7 @@ describe ActivityFeed::Configuration do
         configuration.namespace.should == 'activity_feed'
         configuration.aggregate.should be_false
         configuration.aggregate_key.should == 'aggregate'
-        configuration.page_size.should== 25
+        configuration.page_size.should == 25
       end
     end
   end

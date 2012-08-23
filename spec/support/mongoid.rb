@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'mongoid'
 
 Mongoid.configure do |config|
@@ -10,7 +9,7 @@ DatabaseCleaner[:mongoid].strategy = :truncation
 module ActivityFeed
   module Mongoid
     class Item
-      include ::Mongoid::Document    
+      include ::Mongoid::Document
       include ::Mongoid::Timestamps
 
       field :user_id, :type => String
