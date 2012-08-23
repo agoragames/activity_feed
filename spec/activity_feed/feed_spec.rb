@@ -7,9 +7,9 @@ describe ActivityFeed::Feed do
         add_items_to_feed('david')
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should == 5
-        feed[0].to_i.should == 5
-        feed[4].to_i.should == 1
+        feed.length.should eql(5)
+        feed[0].to_i.should eql(5)
+        feed[4].to_i.should eql(1)
       end
     end
 
@@ -18,9 +18,9 @@ describe ActivityFeed::Feed do
         add_items_to_feed('david', 5, true)
 
         feed = ActivityFeed.feed('david', 1, true)
-        feed.length.should == 5
-        feed[0].to_i.should == 5
-        feed[4].to_i.should == 1
+        feed.length.should eql(5)
+        feed[0].to_i.should eql(5)
+        feed[4].to_i.should eql(1)
       end
     end
   end
@@ -31,9 +31,9 @@ describe ActivityFeed::Feed do
         add_items_to_feed('david', 30)
 
         feed = ActivityFeed.full_feed('david', false)
-        feed.length.should == 30
-        feed[0].to_i.should == 30
-        feed[29].to_i.should == 1
+        feed.length.should eql(30)
+        feed[0].to_i.should eql(30)
+        feed[29].to_i.should eql(1)
       end
     end
 
@@ -42,9 +42,9 @@ describe ActivityFeed::Feed do
         add_items_to_feed('david', 30, true)
 
         feed = ActivityFeed.full_feed('david', true)
-        feed.length.should == 30
-        feed[0].to_i.should == 30
-        feed[29].to_i.should == 1
+        feed.length.should eql(30)
+        feed[0].to_i.should eql(30)
+        feed[29].to_i.should eql(1)
       end
     end
   end
@@ -65,9 +65,9 @@ describe ActivityFeed::Feed do
         Timecop.return
 
         feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i)
-        feed.length.should == 2
-        feed[0].to_i.should == 4
-        feed[1].to_i.should == 3
+        feed.length.should eql(2)
+        feed[0].to_i.should eql(4)
+        feed[1].to_i.should eql(3)
       end
     end
 
@@ -86,9 +86,9 @@ describe ActivityFeed::Feed do
         Timecop.return
 
         feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
-        feed.length.should == 2
-        feed[0].to_i.should == 4
-        feed[1].to_i.should == 3
+        feed.length.should eql(2)
+        feed[0].to_i.should eql(4)
+        feed[1].to_i.should eql(3)
       end
     end
   end
@@ -98,8 +98,8 @@ describe ActivityFeed::Feed do
       it 'should return the correct number of pages in the activity feed' do
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1)
 
-        ActivityFeed.total_pages_in_feed('david').should == 2
-        ActivityFeed.total_pages('david').should == 2
+        ActivityFeed.total_pages_in_feed('david').should eql(2)
+        ActivityFeed.total_pages('david').should eql(2)
       end
     end
 
@@ -107,8 +107,8 @@ describe ActivityFeed::Feed do
       it 'should return the correct number of pages in the aggregate activity feed' do
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
 
-        ActivityFeed.total_pages_in_feed('david', true).should == 2
-        ActivityFeed.total_pages('david', true).should == 2
+        ActivityFeed.total_pages_in_feed('david', true).should eql(2)
+        ActivityFeed.total_pages('david', true).should eql(2)
       end
     end
 
@@ -116,8 +116,8 @@ describe ActivityFeed::Feed do
       it 'should return the correct number of pages in the activity feed' do
         add_items_to_feed('david', 25)
 
-        ActivityFeed.total_pages_in_feed('david', false, 4).should == 7
-        ActivityFeed.total_pages('david', false, 4).should == 7
+        ActivityFeed.total_pages_in_feed('david', false, 4).should eql(7)
+        ActivityFeed.total_pages('david', false, 4).should eql(7)
       end
     end
   end
@@ -126,13 +126,13 @@ describe ActivityFeed::Feed do
     it 'should remove the activity feeds for a given user ID' do
       add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
 
-      ActivityFeed.total_items_in_feed('david').should == Leaderboard::DEFAULT_PAGE_SIZE + 1
-      ActivityFeed.total_items_in_feed('david', true).should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+      ActivityFeed.total_items_in_feed('david').should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+      ActivityFeed.total_items_in_feed('david', true).should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
 
       ActivityFeed.remove_feeds('david')
 
-      ActivityFeed.total_items_in_feed('david').should == 0
-      ActivityFeed.total_items_in_feed('david', true).should == 0
+      ActivityFeed.total_items_in_feed('david').should eql(0)
+      ActivityFeed.total_items_in_feed('david', true).should eql(0)
     end
   end
 
@@ -141,8 +141,8 @@ describe ActivityFeed::Feed do
       it 'should return the correct number of items in the activity feed' do
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1)
 
-        ActivityFeed.total_items_in_feed('david').should == Leaderboard::DEFAULT_PAGE_SIZE + 1
-        ActivityFeed.total_items('david').should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+        ActivityFeed.total_items_in_feed('david').should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+        ActivityFeed.total_items('david').should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
       end
     end
 
@@ -150,8 +150,8 @@ describe ActivityFeed::Feed do
       it 'should return the correct number of items in the aggregate activity feed' do
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
 
-        ActivityFeed.total_items_in_feed('david', true).should == Leaderboard::DEFAULT_PAGE_SIZE + 1
-        ActivityFeed.total_items('david', true).should == Leaderboard::DEFAULT_PAGE_SIZE + 1
+        ActivityFeed.total_items_in_feed('david', true).should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+        ActivityFeed.total_items('david', true).should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
       end
     end
   end
@@ -173,9 +173,9 @@ describe ActivityFeed::Feed do
 
         ActivityFeed.trim_feed('david', Time.local(2012, 6, 19, 4, 29, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i)
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should == 2
-        feed[0].to_i.should == 5
-        feed[1].to_i.should == 1
+        feed.length.should eql(2)
+        feed[0].to_i.should eql(5)
+        feed[1].to_i.should eql(1)
       end
     end
 
@@ -195,9 +195,9 @@ describe ActivityFeed::Feed do
 
         ActivityFeed.trim_feed('david', Time.local(2012, 6, 19, 4, 29, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
         feed = ActivityFeed.feed('david', 1, true)
-        feed.length.should == 2
-        feed[0].to_i.should == 5
-        feed[1].to_i.should == 1
+        feed.length.should eql(2)
+        feed[0].to_i.should eql(5)
+        feed[1].to_i.should eql(1)
       end
     end
   end
@@ -210,7 +210,7 @@ describe ActivityFeed::Feed do
         end
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should == 0
+        feed.length.should eql(0)
 
         item = ActivityFeed::ActiveRecord::Item.create(
           :user_id => 'david',
@@ -221,7 +221,7 @@ describe ActivityFeed::Feed do
         )
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should == 1
+        feed.length.should eql(1)
         feed[0].should == item
       end
     end
@@ -231,7 +231,7 @@ describe ActivityFeed::Feed do
         ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should == 0
+        feed.length.should eql(0)
 
         item = ActivityFeed::Mongoid::Item.create(
           :user_id => 'david',
@@ -243,7 +243,7 @@ describe ActivityFeed::Feed do
         )
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should == 1
+        feed.length.should eql(1)
         feed[0].should == item
       end
     end
