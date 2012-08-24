@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.1 (2012-08-27)
+
+* Added `total_pages` and `total_items` as aliases for `total_pages_in_feed` and `total_items_in_feed`, respectively.
+
 ## 2.2.0 (2012-08-20)
 
 * Added `expire_feed(user_id, seconds, aggregate = ActivityFeed.aggregate)` and `expire_feed_at(user_id, timestamp, aggregate = ActivityFeed.aggregate)` methods to expire an activity feed after a given number of seconds or at a given time stamp, respectively.
