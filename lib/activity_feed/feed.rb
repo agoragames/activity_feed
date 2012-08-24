@@ -90,6 +90,8 @@ module ActivityFeed
       ActivityFeed.feederboard_for(user_id, aggregate).total_pages_in(ActivityFeed.feed_key(user_id, aggregate), page_size)
     end
 
+    alias_method :total_pages, :total_pages_in_feed
+
     # Return the total number of items in the activity feed.
     #
     # @param user_id [String] User ID.
@@ -99,6 +101,8 @@ module ActivityFeed
     def total_items_in_feed(user_id, aggregate = ActivityFeed.aggregate)
       ActivityFeed.feederboard_for(user_id, aggregate).total_members
     end
+
+    alias_method :total_items, :total_items_in_feed
 
     # Remove the activity feeds for a given +user_id+.
     #
