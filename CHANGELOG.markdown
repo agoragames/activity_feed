@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.2 (2012-09-12)
+
+* Added `add_item(...)` as an alias for `update_item(...)`.
+
 ## 2.2.1 (2012-08-27)
 
 * Added `total_pages` and `total_items` as aliases for `total_pages_in_feed` and `total_items_in_feed`, respectively.
