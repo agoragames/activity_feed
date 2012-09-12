@@ -22,6 +22,16 @@ describe ActivityFeed::Item do
     end
   end
 
+  describe '#add_item' do
+    describe 'without aggregation' do
+      it 'should correctly build an activity feed' do
+        ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_false
+        ActivityFeed.add_item('david', 1, DateTime.now.to_i)
+        ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_true
+      end
+    end
+  end
+
   describe '#aggregate_item' do
     it 'should correctly add an item into an aggregate activity feed' do
       ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_false
