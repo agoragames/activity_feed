@@ -16,8 +16,10 @@ module ActivityFeed
       end
     end
 
-    # Specifically aggregate an item in the activity feed for a given +user_id+. 
-    # This is useful if you are going to background the process of populating 
+    alias_method :add_item, :update_item
+
+    # Specifically aggregate an item in the activity feed for a given +user_id+.
+    # This is useful if you are going to background the process of populating
     # a user's activity feed from friend's activities.
     #
     # @param user_id [String] User ID.
@@ -28,10 +30,10 @@ module ActivityFeed
       feederboard.rank_member(item_id, timestamp)
     end
 
-    # Remove an item from the activity feed for a given +user_id+. This 
+    # Remove an item from the activity feed for a given +user_id+. This
     # will also remove the item from the aggregate activity feed for the
     # user.
-    # 
+    #
     # @param user_id [String] User ID.
     # @param item_id [String] Item ID.
     def remove_item(user_id, item_id)
