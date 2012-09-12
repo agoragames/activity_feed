@@ -282,6 +282,9 @@ feeds in which that activity feed item may have been aggregated.
 # Item-related
 
 ActivityFeed.update_item(user_id, item_id, timestamp, aggregate = ActivityFeed.aggregate)
+ActivityFeed.add_item(user_id, item_id, timestamp, aggregate = ActivityFeed.aggregate)
+# add_item is an alias for update_item
+
 ActivityFeed.aggregate_item(user_id, item_id, timestamp)
 ActivityFeed.remove_item(user_id, item_id)
 
