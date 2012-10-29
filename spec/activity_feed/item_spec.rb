@@ -6,7 +6,7 @@ describe ActivityFeed::Item do
     describe 'without aggregation' do
       it 'should correctly build an activity feed' do
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_false
-        ActivityFeed.update_item('david', 1, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 1, Time.now.to_i)
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_true
       end
     end
@@ -15,7 +15,7 @@ describe ActivityFeed::Item do
       it 'should correctly build an activity feed with an aggregate activity_feed' do
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_false
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david', true)).should be_false
-        ActivityFeed.update_item('david', 1, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 1, Time.now.to_i, true)
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_true
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david', true)).should be_true
       end
@@ -26,7 +26,7 @@ describe ActivityFeed::Item do
     describe 'without aggregation' do
       it 'should correctly build an activity feed' do
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_false
-        ActivityFeed.add_item('david', 1, DateTime.now.to_i)
+        ActivityFeed.add_item('david', 1, Time.now.to_i)
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_true
       end
     end
@@ -36,7 +36,7 @@ describe ActivityFeed::Item do
     it 'should correctly add an item into an aggregate activity feed' do
       ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_false
       ActivityFeed.redis.exists(ActivityFeed.feed_key('david', true)).should be_false
-      ActivityFeed.aggregate_item('david', 1, DateTime.now.to_i)
+      ActivityFeed.aggregate_item('david', 1, Time.now.to_i)
       ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_false
       ActivityFeed.redis.exists(ActivityFeed.feed_key('david', true)).should be_true
     end
@@ -47,7 +47,7 @@ describe ActivityFeed::Item do
       it 'should remove an item from an activity feed' do
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_false
         ActivityFeed.redis.zcard(ActivityFeed.feed_key('david')).should eql(0)
-        ActivityFeed.update_item('david', 1, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 1, Time.now.to_i)
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_true
         ActivityFeed.redis.zcard(ActivityFeed.feed_key('david')).should eql(1)
         ActivityFeed.remove_item('david', 1)
@@ -61,7 +61,7 @@ describe ActivityFeed::Item do
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david', true)).should be_false
         ActivityFeed.redis.zcard(ActivityFeed.feed_key('david')).should eql(0)
         ActivityFeed.redis.zcard(ActivityFeed.feed_key('david', true)).should eql(0)
-        ActivityFeed.update_item('david', 1, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 1, Time.now.to_i, true)
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david')).should be_true
         ActivityFeed.redis.exists(ActivityFeed.feed_key('david', true)).should be_true
         ActivityFeed.redis.zcard(ActivityFeed.feed_key('david')).should eql(1)

@@ -53,15 +53,15 @@ describe ActivityFeed::Feed do
     describe 'without aggregation' do
       it 'should return activity feed items between the starting and ending timestamps' do
         Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
-        ActivityFeed.update_item('david', 1, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 1, Time.now.to_i)
         Timecop.travel(Time.local(2012, 6, 19, 4, 30, 0))
-        ActivityFeed.update_item('david', 2, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 2, Time.now.to_i)
         Timecop.travel(Time.local(2012, 6, 19, 5, 30, 0))
-        ActivityFeed.update_item('david', 3, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 3, Time.now.to_i)
         Timecop.travel(Time.local(2012, 6, 19, 6, 37, 0))
-        ActivityFeed.update_item('david', 4, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 4, Time.now.to_i)
         Timecop.travel(Time.local(2012, 6, 19, 8, 17, 0))
-        ActivityFeed.update_item('david', 5, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 5, Time.now.to_i)
         Timecop.return
 
         feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i)
@@ -74,15 +74,15 @@ describe ActivityFeed::Feed do
     describe 'with aggregation' do
       it 'should return activity feed items between the starting and ending timestamps' do
         Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
-        ActivityFeed.update_item('david', 1, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 1, Time.now.to_i, true)
         Timecop.travel(Time.local(2012, 6, 19, 4, 30, 0))
-        ActivityFeed.update_item('david', 2, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 2, Time.now.to_i, true)
         Timecop.travel(Time.local(2012, 6, 19, 5, 30, 0))
-        ActivityFeed.update_item('david', 3, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 3, Time.now.to_i, true)
         Timecop.travel(Time.local(2012, 6, 19, 6, 37, 0))
-        ActivityFeed.update_item('david', 4, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 4, Time.now.to_i, true)
         Timecop.travel(Time.local(2012, 6, 19, 8, 17, 0))
-        ActivityFeed.update_item('david', 5, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 5, Time.now.to_i, true)
         Timecop.return
 
         feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
@@ -160,15 +160,15 @@ describe ActivityFeed::Feed do
     describe 'without aggregation' do
       it 'should trim activity feed items between the starting and ending timestamps' do
         Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
-        ActivityFeed.update_item('david', 1, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 1, Time.now.to_i)
         Timecop.travel(Time.local(2012, 6, 19, 4, 30, 0))
-        ActivityFeed.update_item('david', 2, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 2, Time.now.to_i)
         Timecop.travel(Time.local(2012, 6, 19, 5, 30, 0))
-        ActivityFeed.update_item('david', 3, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 3, Time.now.to_i)
         Timecop.travel(Time.local(2012, 6, 19, 6, 37, 0))
-        ActivityFeed.update_item('david', 4, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 4, Time.now.to_i)
         Timecop.travel(Time.local(2012, 6, 19, 8, 17, 0))
-        ActivityFeed.update_item('david', 5, DateTime.now.to_i)
+        ActivityFeed.update_item('david', 5, Time.now.to_i)
         Timecop.return
 
         ActivityFeed.trim_feed('david', Time.local(2012, 6, 19, 4, 29, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i)
@@ -182,15 +182,15 @@ describe ActivityFeed::Feed do
     describe 'with aggregation' do
       it 'should trim activity feed items between the starting and ending timestamps' do
         Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
-        ActivityFeed.update_item('david', 1, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 1, Time.now.to_i, true)
         Timecop.travel(Time.local(2012, 6, 19, 4, 30, 0))
-        ActivityFeed.update_item('david', 2, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 2, Time.now.to_i, true)
         Timecop.travel(Time.local(2012, 6, 19, 5, 30, 0))
-        ActivityFeed.update_item('david', 3, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 3, Time.now.to_i, true)
         Timecop.travel(Time.local(2012, 6, 19, 6, 37, 0))
-        ActivityFeed.update_item('david', 4, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 4, Time.now.to_i, true)
         Timecop.travel(Time.local(2012, 6, 19, 8, 17, 0))
-        ActivityFeed.update_item('david', 5, DateTime.now.to_i, true)
+        ActivityFeed.update_item('david', 5, Time.now.to_i, true)
         Timecop.return
 
         ActivityFeed.trim_feed('david', Time.local(2012, 6, 19, 4, 29, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
