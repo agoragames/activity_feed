@@ -1,0 +1,6 @@
+test:
+  sessions:
+    default:
+      database: activity_feed_gem_test
+      hosts:
+        - localhost:27017

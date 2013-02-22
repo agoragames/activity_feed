@@ -1,8 +1,12 @@
 require 'mongoid'
 
-Mongoid.configure do |config|
-  config.master = Mongo::Connection.new.db("activity_feed_gem_test")
-end
+# If using Mongoid 2.x
+# Mongoid.configure do |config|
+#   config.master = Mongo::Connection.new.db("activity_feed_gem_test")
+# end
+
+# If using Mongoid 3.x
+Mongoid.load!("#{File.dirname(__FILE__)}/mongoid.yml", :test)
 
 DatabaseCleaner[:mongoid].strategy = :truncation
 
@@ -23,7 +27,11 @@ module ActivityFeed
       field :icon, :type=> String
       field :sticky, :type=> Boolean
 
-      index :user_id
+      # If using Mongoid 2.x
+      # index :user_id
+
+      # If using Mongoid 3.x
+      index({ user_id: 1})
 
       after_save :update_activity_feed
 
