@@ -287,6 +287,7 @@ ActivityFeed.add_item(user_id, item_id, timestamp, aggregate = ActivityFeed.aggr
 
 ActivityFeed.aggregate_item(user_id, item_id, timestamp)
 ActivityFeed.remove_item(user_id, item_id)
+ActivityFeed.check_item?(user_id, item_id, aggregate = ActivityFeed.aggregate)
 
 # Feed-related
 

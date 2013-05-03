@@ -42,5 +42,17 @@ module ActivityFeed
       feederboard = ActivityFeed.feederboard_for(user_id, true)
       feederboard.remove_member(item_id)
     end
+
+    # Check to see if an item is in the activity feed for a given +user_id+.
+    #
+    # @param user_id [String] User ID.
+    # @param item_id [String] Item ID.
+    # @param aggregate [boolean, false] Whether or not to check the aggregate activity feed.
+    def check_item?(user_id, item_id, aggregate = ActivityFeed.aggregate)
+      feederboard_individual = ActivityFeed.feederboard_for(user_id, false)
+      feederboard_aggregate = ActivityFeed.feederboard_for(user_id, true)
+
+      aggregate ? feederboard_aggregate.check_member?(item_id) : feederboard_individual.check_member?(item_id)
+    end
   end
 end
