@@ -72,4 +72,24 @@ describe ActivityFeed::Item do
       end
     end
   end
+
+  describe '#check_item?' do
+    describe 'without aggregation' do
+      it 'should return whether or not an item exists in the feed' do
+        ActivityFeed.aggregate = false
+        ActivityFeed.check_item?('david', 1).should be_false
+        ActivityFeed.add_item('david', 1, Time.now.to_i)
+        ActivityFeed.check_item?('david', 1).should be_true
+      end
+    end
+
+    describe 'with aggregation' do
+      it 'should return whether or not an item exists in the feed' do
+        ActivityFeed.aggregate = true
+        ActivityFeed.check_item?('david', 1, true).should be_false
+        ActivityFeed.add_item('david', 1, Time.now.to_i)
+        ActivityFeed.check_item?('david', 1, true).should be_true
+      end
+    end
+  end
 end
