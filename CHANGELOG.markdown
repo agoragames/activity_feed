@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.3.0 (2013-05-03)
+
+* Added `check_item?(user_id, item_id, aggregate = ActivityFeed.aggregate)` to see if an item is in an activity feed.
+
 ## 2.2.2 (2012-09-12)
 
 * Added `add_item(...)` as an alias for `update_item(...)`.
