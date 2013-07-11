@@ -42,7 +42,9 @@ end
 
 ### Advanced configuration options
 
-* `item_loader`: ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) when a page for a user's activity feed is requested. This option should be set to a Proc that will be called passing the item ID as its only argument.
+* `items_loader`: ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) when a page for a user's activity feed is requested. This option should be set to a Proc that will be called passing the item IDs as its only argument.
+
+NOTE: The following examples developing an activity feed with Mongoid using Mongoid 3.x.
 
 For example:
 
@@ -68,14 +70,19 @@ module ActivityFeed
       field :icon, type: String
       field :sticky, type: Boolean
 
-      index :user_id
+      index({ user_id: 1 }
 
       after_save :update_item_in_activity_feed
+      after_destroy :remove_item_from_activity_feed
 
       private
 
       def update_item_in_activity_feed
         ActivityFeed.update_item(self.user_id, self.id, self.updated_at.to_i)
+      end
+
+      def remove_item_from_activity_feed
+        ActivityFeed.remove_item(self.user_id, self.id)
       end
     end
   end
@@ -85,7 +92,7 @@ end
 You would add the following option where you are configuring ActivityFeed as follows:
 
 ```ruby
-ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+ActivityFeed.items_loader = Proc.new { |ids| ActivityFeed::Mongoid::Item.where(:id.in => ids).order_by(updated_at: :desc).to_a }
 ```
 
 If you need to handle any exceptions when loading activity feed items, please do this in the Proc.
@@ -103,9 +110,7 @@ activity feed.
 # Configure Mongoid
 require 'mongoid'
 
-Mongoid.configure do |config|
-  config.master = Mongo::Connection.new.db("activity_feed_gem_test")
-end
+Mongoid.load!("/path/to/your/mongoid.yml", :production)
 
 # Create a class for activity feed items
 module ActivityFeed
@@ -125,7 +130,7 @@ module ActivityFeed
       field :icon, type: String
       field :sticky, type: Boolean
 
-      index :user_id
+      index({ user_id: 1 }
 
       after_save :update_item_in_activity_feed
       after_destroy :remove_item_from_activity_feed
@@ -152,7 +157,7 @@ ActivityFeed.configure do |configuration|
   configuration.aggregate = false
   configuration.aggregate_key = 'aggregate'
   configuration.page_size = 25
-  configuration.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+  configuration.items_loader = Proc.new { |ids| ActivityFeed::Mongoid::Item.where(:id.in => ids).order_by(updated_at: :desc).to_a }
 end
 
 # Create a couple of activity feed items
@@ -193,9 +198,7 @@ feed = ActivityFeed.feed('david', 1)
 # Configure Mongoid
 require 'mongoid'
 
-Mongoid.configure do |config|
-  config.master = Mongo::Connection.new.db("activity_feed_gem_test")
-end
+Mongoid.load!("/path/to/your/mongoid.yml", :production)
 
 # Create a class for activity feed items
 module ActivityFeed
@@ -234,7 +237,7 @@ ActivityFeed.configure do |configuration|
   configuration.aggregate = true
   configuration.aggregate_key = 'aggregate'
   configuration.page_size = 25
-  configuration.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+  configuration.items_loader = Proc.new { |ids| ActivityFeed::Mongoid::Item.where(:id.in => ids).order_by(updated_at: :desc).to_a }
 end
 
 # Create activity feed items for a couple of users and aggregate the activity feed items from the second user in the first user's activity feed
@@ -300,6 +303,7 @@ ActivityFeed.total_items_in_feed(user_id, aggregate = ActivityFeed.aggregate)
 ActivityFeed.total_items(user_id, aggregate = ActivityFeed.aggregate)
 ActivityFeed.trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
 ActivityFeed.expire_feed(user_id, seconds, aggregate = ActivityFeed.aggregate)
+ActivityFeed.expire_feed_in(user_id, seconds, aggregate = ActivityFeed.aggregate)
 ActivityFeed.expire_feed_at(user_id, timestamp, aggregate = ActivityFeed.aggregate)
 ActivityFeed.remove_feeds(user_id)
 ```

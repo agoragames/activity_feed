@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 3.0.0
+
+* Allow for bulk-loading of feed items. The `ActivityFeed.item_loader`
+  has been renamed to `ActivityFeed.items_loader`. The only difference
+  is that the proc is now passed an array of IDs, rather than an
+  individual ID.
+* Updated `item_loader` references to `items_loader` throughout internal
+  documentation and README.
+* Added `expire_feed_in` method alias for `expire_feed`.
+
 ## 2.3.0 (2013-05-03)
 
 * Added `check_item?(user_id, item_id, aggregate = ActivityFeed.aggregate)` to see if an item is in an activity feed.
