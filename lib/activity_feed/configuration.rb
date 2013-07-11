@@ -5,7 +5,7 @@ module ActivityFeed
     attr_accessor :redis
 
     # Proc that will be called for loading an item from an ORM (e.g. ActiveRecord) or ODM (e.g. Mongoid). Proc will be called with the ID of the item from the feed.
-    attr_accessor :item_loader
+    attr_accessor :items_loader
 
     # ActivityFeed namespace for Redis.
     attr_writer :namespace
@@ -56,7 +56,7 @@ module ActivityFeed
     end
 
     # Default page size.
-    # 
+    #
     # @return the page size or the default of 25 if not set.
     def page_size
       @page_size ||= 25

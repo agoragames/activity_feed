@@ -205,8 +205,8 @@ describe ActivityFeed::Feed do
   describe 'ORM or ODM loading' do
     describe 'ActiveRecord' do
       it 'should be able to load an item via ActiveRecord when requesting a feed' do
-        ActivityFeed.item_loader = Proc.new do |id|
-          ActivityFeed::ActiveRecord::Item.find(id)
+        ActivityFeed.items_loader = Proc.new do |ids|
+          ActivityFeed::ActiveRecord::Item.find(ids)
         end
 
         feed = ActivityFeed.feed('david', 1)
@@ -228,7 +228,9 @@ describe ActivityFeed::Feed do
 
     describe 'Mongoid' do
       it 'should be able to load an item via Mongoid when requesting a feed' do
-        ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+        ActivityFeed.items_loader = Proc.new do |ids|
+          ActivityFeed::Mongoid::Item.find(ids)
+        end
 
         feed = ActivityFeed.feed('david', 1)
         feed.length.should eql(0)

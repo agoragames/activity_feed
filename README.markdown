@@ -42,7 +42,7 @@ end
 
 ### Advanced configuration options
 
-* `item_loader`: ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) when a page for a user's activity feed is requested. This option should be set to a Proc that will be called passing the item ID as its only argument.
+* `items_loader`: ActivityFeed supports loading items from your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid) when a page for a user's activity feed is requested. This option should be set to a Proc that will be called passing the item IDs as its only argument.
 
 For example:
 
@@ -85,7 +85,7 @@ end
 You would add the following option where you are configuring ActivityFeed as follows:
 
 ```ruby
-ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+ActivityFeed.items_loader = Proc.new { |ids| ActivityFeed::Mongoid::Item.find(ids) }
 ```
 
 If you need to handle any exceptions when loading activity feed items, please do this in the Proc.
@@ -152,7 +152,7 @@ ActivityFeed.configure do |configuration|
   configuration.aggregate = false
   configuration.aggregate_key = 'aggregate'
   configuration.page_size = 25
-  configuration.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+  configuration.items_loader = Proc.new { |ids| ActivityFeed::Mongoid::Item.find(ids) }
 end
 
 # Create a couple of activity feed items
@@ -234,7 +234,7 @@ ActivityFeed.configure do |configuration|
   configuration.aggregate = true
   configuration.aggregate_key = 'aggregate'
   configuration.page_size = 25
-  configuration.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+  configuration.items_loader = Proc.new { |ids| ActivityFeed::Mongoid::Item.find(ids) }
 end
 
 # Create activity feed items for a couple of users and aggregate the activity feed items from the second user in the first user's activity feed
