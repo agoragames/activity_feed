@@ -10,14 +10,13 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/agoragames/activity_feed'
   s.summary     = %q{Activity feeds backed by Redis}
   s.description = %q{Activity feeds backed by Redis}
+  s.license = 'MIT'
 
   s.rubyforge_project = 'activity_feed'
-  s.license = 'MIT'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-
   s.require_paths = ['lib']
 
   s.add_development_dependency('rake')
