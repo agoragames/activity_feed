@@ -12,13 +12,14 @@ Gem::Specification.new do |s|
   s.description = %q{Activity feeds backed by Redis}
 
   s.rubyforge_project = 'activity_feed'
+  s.license = 'MIT'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  
+
   s.require_paths = ['lib']
-  
+
   s.add_development_dependency('rake')
   s.add_development_dependency('rspec')
   s.add_development_dependency('activesupport')
@@ -29,12 +30,12 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency('activerecord')
   s.add_development_dependency('sqlite3')
-  
+
   s.add_development_dependency('database_cleaner')
 
   if '1.8.7'.eql?(RUBY_VERSION)
     s.add_development_dependency('SystemTimer')
   end
-   
+
   s.add_dependency('leaderboard')
 end
