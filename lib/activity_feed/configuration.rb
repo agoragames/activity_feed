@@ -4,7 +4,9 @@ module ActivityFeed
     # Redis instance.
     attr_accessor :redis
 
-    # Proc that will be called for loading an item from an ORM (e.g. ActiveRecord) or ODM (e.g. Mongoid). Proc will be called with the ID of the item from the feed.
+    # Proc that will be called for loading items from an
+    # ORM (e.g. ActiveRecord) or ODM (e.g. Mongoid). Proc
+    # will be called with the IDs of the items from the feed.
     attr_accessor :items_loader
 
     # ActivityFeed namespace for Redis.
@@ -19,7 +21,8 @@ module ActivityFeed
     # Page size to be used when paging through the activity feed.
     attr_writer :page_size
 
-    # Yield self to be able to configure ActivityFeed with block-style configuration.
+    # Yield self to be able to configure ActivityFeed with
+    # block-style configuration.
     #
     # Example:
     #

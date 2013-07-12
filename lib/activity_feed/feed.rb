@@ -1,7 +1,7 @@
 module ActivityFeed
   module Feed
     # Retrieve a page from the activity feed for a given +user_id+. You can configure
-    # +ActivityFeed.items_loader+ with a Proc to retrieve an item from, for example,
+    # +ActivityFeed.items_loader+ with a Proc to retrieve items from, for example,
     # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the page
     # returned with loaded items rather than item IDs.
     #
@@ -17,7 +17,7 @@ module ActivityFeed
     end
 
     # Retrieve the entire activity feed for a given +user_id+. You can configure
-    # +ActivityFeed.items_loader+ with a Proc to retrieve an item from, for example,
+    # +ActivityFeed.items_loader+ with a Proc to retrieve items from, for example,
     # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the page
     # returned with loaded items rather than item IDs.
     #
@@ -33,7 +33,7 @@ module ActivityFeed
 
     # Retrieve a page from the activity feed for a given +user_id+ between a
     # +starting_timestamp+ and an +ending_timestamp+. You can configure
-    # +ActivityFeed.items_loader+ with a Proc to retrieve an item from, for example,
+    # +ActivityFeed.items_loader+ with a Proc to retrieve items from, for example,
     # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the feed data
     # returned with loaded items rather than item IDs.
     #
@@ -102,6 +102,8 @@ module ActivityFeed
     def expire_feed(user_id, seconds, aggregate = ActivityFeed.aggregate)
       ActivityFeed.redis.expire(ActivityFeed.feed_key(user_id, aggregate), seconds)
     end
+
+    alias_method :expire_feed_in, :expire_feed
 
     # Expire an activity feed at a given timestamp.
     #
