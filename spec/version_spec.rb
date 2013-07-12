@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'ActivityFeed::VERSION' do
-  it "should be the correct version" do
-    ActivityFeed::VERSION.should == '2.3.0'
+  it 'should be the correct version' do
+    ActivityFeed::VERSION.should == '3.0.0'
   end
 end

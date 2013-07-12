@@ -205,8 +205,8 @@ describe ActivityFeed::Feed do
   describe 'ORM or ODM loading' do
     describe 'ActiveRecord' do
       it 'should be able to load an item via ActiveRecord when requesting a feed' do
-        ActivityFeed.item_loader = Proc.new do |id|
-          ActivityFeed::ActiveRecord::Item.find(id)
+        ActivityFeed.items_loader = Proc.new do |ids|
+          ActivityFeed::ActiveRecord::Item.find(ids)
         end
 
         feed = ActivityFeed.feed('david', 1)
@@ -228,7 +228,9 @@ describe ActivityFeed::Feed do
 
     describe 'Mongoid' do
       it 'should be able to load an item via Mongoid when requesting a feed' do
-        ActivityFeed.item_loader = Proc.new { |id| ActivityFeed::Mongoid::Item.find(id) }
+        ActivityFeed.items_loader = Proc.new do |ids|
+          ActivityFeed::Mongoid::Item.find(ids)
+        end
 
         feed = ActivityFeed.feed('david', 1)
         feed.length.should eql(0)
@@ -249,11 +251,21 @@ describe ActivityFeed::Feed do
     end
   end
 
-  describe '#expire_feed' do
-    it 'should set an expiration on an activity feed' do
+  describe '#expire_feed and #expire_feed_in' do
+    it 'should set an expiration on an activity feed using #expire_feed' do
       add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE)
 
       ActivityFeed.expire_feed('david', 10)
+      ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
+        ttl.should be > 1
+        ttl.should be <= 10
+      end
+    end
+
+    it 'should set an expiration on an activity feed using #expire_feed_in' do
+      add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE)
+
+      ActivityFeed.expire_feed_in('david', 10)
       ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
         ttl.should be > 1
         ttl.should be <= 10
