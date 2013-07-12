@@ -17,7 +17,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
 
     ActivityFeed.configure do |configuration|
-      configuration.item_loader = nil
+      configuration.items_loader = nil
       configuration.aggregate = false
       configuration.redis = Redis.new(:db => 15)
     end
