@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 3.0.0
+## 3.0.0 (2013-07-12)
 
 * Allow for bulk-loading of feed items. The `ActivityFeed.item_loader`
   has been renamed to `ActivityFeed.items_loader`. The only difference
