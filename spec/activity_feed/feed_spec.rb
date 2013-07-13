@@ -11,6 +11,11 @@ describe ActivityFeed::Feed do
         feed[0].to_i.should eql(5)
         feed[4].to_i.should eql(1)
       end
+
+      it 'should not blow up without any feed items' do
+        feed = ActivityFeed.feed('david', 1)
+        feed.length.should eql(0)
+      end
     end
 
     describe 'with aggregation' do
@@ -21,6 +26,11 @@ describe ActivityFeed::Feed do
         feed.length.should eql(5)
         feed[0].to_i.should eql(5)
         feed[4].to_i.should eql(1)
+      end
+
+      it 'should not blow up without any feed items' do
+        feed = ActivityFeed.feed('david', 1, true)
+        feed.length.should eql(0)
       end
     end
   end
@@ -35,6 +45,11 @@ describe ActivityFeed::Feed do
         feed[0].to_i.should eql(30)
         feed[29].to_i.should eql(1)
       end
+
+      it 'should not blow up without any feed items' do
+        feed = ActivityFeed.full_feed('david', false)
+        feed.length.should eql(0)
+      end
     end
 
     describe 'with aggregation' do
@@ -45,6 +60,11 @@ describe ActivityFeed::Feed do
         feed.length.should eql(30)
         feed[0].to_i.should eql(30)
         feed[29].to_i.should eql(1)
+      end
+
+      it 'should not blow up without any feed items' do
+        feed = ActivityFeed.full_feed('david', true)
+        feed.length.should eql(0)
       end
     end
   end
@@ -64,10 +84,15 @@ describe ActivityFeed::Feed do
         ActivityFeed.update_item('david', 5, Time.now.to_i)
         Timecop.return
 
-        feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i)
+        feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, false)
         feed.length.should eql(2)
         feed[0].to_i.should eql(4)
         feed[1].to_i.should eql(3)
+      end
+
+      it 'should not blow up without any feed items' do
+        feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, false)
+        feed.length.should eql(0)
       end
     end
 
@@ -90,6 +115,11 @@ describe ActivityFeed::Feed do
         feed[0].to_i.should eql(4)
         feed[1].to_i.should eql(3)
       end
+
+      it 'should not blow up without any feed items' do
+        feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
+        feed.length.should eql(0)
+      end
     end
   end
 
@@ -101,6 +131,11 @@ describe ActivityFeed::Feed do
         ActivityFeed.total_pages_in_feed('david').should eql(2)
         ActivityFeed.total_pages('david').should eql(2)
       end
+
+      it 'should return the correct number of pages without any items in the activity feed' do
+        ActivityFeed.total_pages_in_feed('david').should eql(0)
+        ActivityFeed.total_pages('david').should eql(0)
+      end
     end
 
     describe 'with aggregation' do
@@ -110,6 +145,11 @@ describe ActivityFeed::Feed do
         ActivityFeed.total_pages_in_feed('david', true).should eql(2)
         ActivityFeed.total_pages('david', true).should eql(2)
       end
+
+      it 'should return the correct number of pages in the aggregate activity feed without an items in the activity feed' do
+        ActivityFeed.total_pages_in_feed('david', true).should eql(0)
+        ActivityFeed.total_pages('david', true).should eql(0)
+      end
     end
 
     describe 'changing page_size parameter' do
@@ -118,6 +158,11 @@ describe ActivityFeed::Feed do
 
         ActivityFeed.total_pages_in_feed('david', false, 4).should eql(7)
         ActivityFeed.total_pages('david', false, 4).should eql(7)
+      end
+
+      it 'should return the correct number of pages in the activity feed without any items in the activity feed' do
+        ActivityFeed.total_pages_in_feed('david', false, 4).should eql(0)
+        ActivityFeed.total_pages('david', false, 4).should eql(0)
       end
     end
   end
@@ -144,6 +189,11 @@ describe ActivityFeed::Feed do
         ActivityFeed.total_items_in_feed('david').should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
         ActivityFeed.total_items('david').should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
       end
+
+      it 'should return the correct number of items in the activity feed without any items in the activity feed' do
+        ActivityFeed.total_items_in_feed('david').should eql(0)
+        ActivityFeed.total_items('david').should eql(0)
+      end
     end
 
     describe 'with aggregation' do
@@ -152,6 +202,11 @@ describe ActivityFeed::Feed do
 
         ActivityFeed.total_items_in_feed('david', true).should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
         ActivityFeed.total_items('david', true).should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+      end
+
+      it 'should return the correct number of items in the aggregate activity feed without any items in the activity feed' do
+        ActivityFeed.total_items_in_feed('david', true).should eql(0)
+        ActivityFeed.total_items('david', true).should eql(0)
       end
     end
   end
