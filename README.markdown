@@ -286,7 +286,6 @@ feeds in which that activity feed item may have been aggregated.
 
 ActivityFeed.update_item(user_id, item_id, timestamp, aggregate = ActivityFeed.aggregate)
 ActivityFeed.add_item(user_id, item_id, timestamp, aggregate = ActivityFeed.aggregate)
-# add_item is an alias for update_item
 
 ActivityFeed.aggregate_item(user_id, item_id, timestamp)
 ActivityFeed.remove_item(user_id, item_id)
@@ -295,16 +294,29 @@ ActivityFeed.check_item?(user_id, item_id, aggregate = ActivityFeed.aggregate)
 # Feed-related
 
 ActivityFeed.feed(user_id, page, aggregate = ActivityFeed.aggregate)
+ActivityFeed.for(user_id, page, aggregate = ActivityFeed.aggregate)
+
 ActivityFeed.full_feed(user_id, aggregate = ActivityFeed.aggregate)
+
 ActivityFeed.feed_between_timestamps(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
+ActivityFeed.between(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
+
 ActivityFeed.total_pages_in_feed(user_id, aggregate = ActivityFeed.aggregate, page_size = ActivityFeed.page_size)
 ActivityFeed.total_pages(user_id, aggregate = ActivityFeed.aggregate, page_size = ActivityFeed.page_size)
+
 ActivityFeed.total_items_in_feed(user_id, aggregate = ActivityFeed.aggregate)
 ActivityFeed.total_items(user_id, aggregate = ActivityFeed.aggregate)
+
 ActivityFeed.trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
+ActivityFeed.trim(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
+
 ActivityFeed.expire_feed(user_id, seconds, aggregate = ActivityFeed.aggregate)
 ActivityFeed.expire_feed_in(user_id, seconds, aggregate = ActivityFeed.aggregate)
+ActivityFeed.expire_in(user_id, seconds, aggregate = ActivityFeed.aggregate)
+
 ActivityFeed.expire_feed_at(user_id, timestamp, aggregate = ActivityFeed.aggregate)
+ActivityFeed.expire_at(user_id, timestamp, aggregate = ActivityFeed.aggregate)
+
 ActivityFeed.remove_feeds(user_id)
 ```
 
