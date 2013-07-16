@@ -16,6 +16,8 @@ module ActivityFeed
       load_feed_items(feed_items)
     end
 
+    alias_method :for, :feed
+
     # Retrieve the entire activity feed for a given +user_id+. You can configure
     # +ActivityFeed.items_loader+ with a Proc to retrieve items from, for example,
     # your ORM (e.g. ActiveRecord) or your ODM (e.g. Mongoid), and have the page
@@ -48,6 +50,8 @@ module ActivityFeed
       feed_items = feederboard.members_from_score_range(starting_timestamp, ending_timestamp)
       load_feed_items(feed_items)
     end
+
+    alias_method :between, :feed_between_timestamps
 
     # Return the total number of pages in the activity feed.
     #
@@ -94,6 +98,8 @@ module ActivityFeed
       ActivityFeed.feederboard_for(user_id, aggregate).remove_members_in_score_range(starting_timestamp, ending_timestamp)
     end
 
+    alias_method :trim, :trim_feed
+
     # Expire an activity feed after a set number of seconds.
     #
     # @param user_id [String] User ID.
@@ -103,6 +109,7 @@ module ActivityFeed
       ActivityFeed.redis.expire(ActivityFeed.feed_key(user_id, aggregate), seconds)
     end
 
+    alias_method :expire_in, :expire_feed
     alias_method :expire_feed_in, :expire_feed
 
     # Expire an activity feed at a given timestamp.
@@ -113,6 +120,8 @@ module ActivityFeed
     def expire_feed_at(user_id, timestamp, aggregate = ActivityFeed.aggregate)
       ActivityFeed.redis.expireat(ActivityFeed.feed_key(user_id, aggregate), timestamp)
     end
+
+    alias_method :expire_at, :expire_feed_at
 
     private
 
