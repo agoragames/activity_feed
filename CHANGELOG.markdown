@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 3.0.1 ()
+
+More useful aliases:
+
+  * `ActivityFeed.for` as an alias for `ActivityFeed.feed`
+  * `ActivityFeed.between` as an alias for `ActivityFeed.feed_between_timestamps`
+  * `ActivityFeed.trim` as an alias for `ActivityFeed.trim_feed`
+  * `ActivityFeed.expire_in` and `ActivityFeed.expire_feed_in` as aliases for `ActivityFeed.expire_feed`
+  * `ActivityFeed.expire_at` as an alias for `ActivityFeed.expire_feed_at`
+
 ## 3.0.0 (2013-07-12)
 
 * Allow for bulk-loading of feed items. The `ActivityFeed.item_loader`
