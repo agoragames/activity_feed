@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 3.0.1 ()
+## 3.0.1 (2013-07-17)
 
 More useful aliases:
 
