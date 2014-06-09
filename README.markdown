@@ -309,6 +309,8 @@ ActivityFeed.total_items(user_id, aggregate = ActivityFeed.aggregate)
 
 ActivityFeed.trim_feed(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
 ActivityFeed.trim(user_id, starting_timestamp, ending_timestamp, aggregate = ActivityFeed.aggregate)
+ActivityFeed.trim_to_size(user_id, size, aggregate = ActivityFeed.aggregate)
+ActivityFeed.trim_to_(user_id, size, aggregate = ActivityFeed.aggregate)
 
 ActivityFeed.expire_feed(user_id, seconds, aggregate = ActivityFeed.aggregate)
 ActivityFeed.expire_feed_in(user_id, seconds, aggregate = ActivityFeed.aggregate)

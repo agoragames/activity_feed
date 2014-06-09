@@ -245,6 +245,28 @@ describe ActivityFeed::Feed do
     end
   end
 
+  describe '#trim_to_size' do
+    describe 'without aggregation' do
+      it 'should allow you to trim activity feed items to a given size' do
+        add_items_to_feed('david')
+
+        ActivityFeed.total_items('david').should eql(5)
+        ActivityFeed.trim_to_size('david', 3)
+        ActivityFeed.total_items('david').should eql(3)
+      end
+    end
+
+    describe 'with aggregation' do
+      it 'should allow you to trim activity feed items to a given size' do
+        add_items_to_feed('david', 5, true)
+
+        ActivityFeed.total_items('david', true).should eql(5)
+        ActivityFeed.trim_to_size('david', 3, true)
+        ActivityFeed.total_items('david', true).should eql(3)
+      end
+    end
+  end
+
   describe 'ORM or ODM loading' do
     describe 'ActiveRecord' do
       it 'should be able to load an item via ActiveRecord when requesting a feed' do
