@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 3.1.0 (2014-06-09)
+
+* Added `trim_to_size(user_id, size, aggregate = ActivityFeed.aggregate)`
+  to trim activity feed to a certain number of items.
+* `trim_to(...)` is an alias for `trim_to_size(...)`
+
 ## 3.0.1 (2013-07-17)
 
 More useful aliases:
