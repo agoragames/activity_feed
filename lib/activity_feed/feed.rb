@@ -100,6 +100,17 @@ module ActivityFeed
 
     alias_method :trim, :trim_feed
 
+    # Trim an activity feed to a given size.
+    #
+    # @param user_id [String] User ID.
+    # @param size [int] Number of items to keep in the activity feed.
+    # @param aggregate [boolean, false] Whether or not to trim the aggregate activity feed or not.
+    def trim_to_size(user_id, size, aggregate = ActivityFeed.aggregate)
+      ActivityFeed.feederboard_for(user_id, aggregate).remove_members_outside_rank(size)
+    end
+
+    alias_method :trim_to, :trim_to_size
+
     # Expire an activity feed after a set number of seconds.
     #
     # @param user_id [String] User ID.
