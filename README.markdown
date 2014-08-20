@@ -70,7 +70,7 @@ module ActivityFeed
       field :icon, type: String
       field :sticky, type: Boolean
 
-      index({ user_id: 1 }
+      index { user_id: 1 }
 
       after_save :update_item_in_activity_feed
       after_destroy :remove_item_from_activity_feed
@@ -130,7 +130,7 @@ module ActivityFeed
       field :icon, type: String
       field :sticky, type: Boolean
 
-      index({ user_id: 1 }
+      index { user_id: 1 }
 
       after_save :update_item_in_activity_feed
       after_destroy :remove_item_from_activity_feed
@@ -334,4 +334,4 @@ ActivityFeed.remove_feeds(user_id)
 
 ## Copyright
 
-Copyright (c) 2011-2104 David Czarnecki. See LICENSE.txt for further details.
+Copyright (c) 2011-2014 David Czarnecki. See LICENSE.txt for further details.
