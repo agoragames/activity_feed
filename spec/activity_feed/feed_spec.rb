@@ -5,15 +5,15 @@ describe ActivityFeed::Feed do
     describe 'without aggregation' do
       it 'should return an activity feed with the items correctly ordered' do
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should eql(0)
+        expect(feed.length).to eql(0)
 
         add_items_to_feed('david')
 
         [:feed, :for].each do |method|
           feed = ActivityFeed.send(method, 'david', 1)
-          feed.length.should eql(5)
-          feed[0].to_i.should eql(5)
-          feed[4].to_i.should eql(1)
+          expect(feed.length).to eql(5)
+          expect(feed[0].to_i).to eql(5)
+          expect(feed[4].to_i).to eql(1)
         end
       end
     end
@@ -21,14 +21,14 @@ describe ActivityFeed::Feed do
     describe 'with aggregation' do
       it 'should return an aggregate activity feed with the items correctly ordered' do
         feed = ActivityFeed.feed('david', 1, true)
-        feed.length.should eql(0)
+        expect(feed.length).to eql(0)
 
         add_items_to_feed('david', 5, true)
 
         feed = ActivityFeed.feed('david', 1, true)
-        feed.length.should eql(5)
-        feed[0].to_i.should eql(5)
-        feed[4].to_i.should eql(1)
+        expect(feed.length).to eql(5)
+        expect(feed[0].to_i).to eql(5)
+        expect(feed[4].to_i).to eql(1)
       end
     end
   end
@@ -37,28 +37,28 @@ describe ActivityFeed::Feed do
     describe 'without aggregation' do
       it 'should return the full activity feed' do
         feed = ActivityFeed.full_feed('david', false)
-        feed.length.should eql(0)
+        expect(feed.length).to eql(0)
 
         add_items_to_feed('david', 30)
 
         feed = ActivityFeed.full_feed('david', false)
-        feed.length.should eql(30)
-        feed[0].to_i.should eql(30)
-        feed[29].to_i.should eql(1)
+        expect(feed.length).to eql(30)
+        expect(feed[0].to_i).to eql(30)
+        expect(feed[29].to_i).to eql(1)
       end
     end
 
     describe 'with aggregation' do
       it 'should return the full activity feed' do
         feed = ActivityFeed.full_feed('david', true)
-        feed.length.should eql(0)
+        expect(feed.length).to eql(0)
 
         add_items_to_feed('david', 30, true)
 
         feed = ActivityFeed.full_feed('david', true)
-        feed.length.should eql(30)
-        feed[0].to_i.should eql(30)
-        feed[29].to_i.should eql(1)
+        expect(feed.length).to eql(30)
+        expect(feed[0].to_i).to eql(30)
+        expect(feed[29].to_i).to eql(1)
       end
     end
   end
@@ -67,7 +67,7 @@ describe ActivityFeed::Feed do
     describe 'without aggregation' do
       it 'should return activity feed items between the starting and ending timestamps' do
         feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, false)
-        feed.length.should eql(0)
+        expect(feed.length).to eql(0)
 
         Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
         ActivityFeed.update_item('david', 1, Time.now.to_i)
@@ -83,9 +83,9 @@ describe ActivityFeed::Feed do
 
         [:feed_between_timestamps, :between].each do |method|
           feed = ActivityFeed.send(method, 'david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, false)
-          feed.length.should eql(2)
-          feed[0].to_i.should eql(4)
-          feed[1].to_i.should eql(3)
+          expect(feed.length).to eql(2)
+          expect(feed[0].to_i).to eql(4)
+          expect(feed[1].to_i).to eql(3)
         end
       end
     end
@@ -93,7 +93,7 @@ describe ActivityFeed::Feed do
     describe 'with aggregation' do
       it 'should return activity feed items between the starting and ending timestamps' do
         feed = ActivityFeed.feed_between_timestamps('david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
-        feed.length.should eql(0)
+        expect(feed.length).to eql(0)
 
         Timecop.travel(Time.local(2012, 6, 19, 4, 0, 0))
         ActivityFeed.update_item('david', 1, Time.now.to_i, true)
@@ -109,9 +109,9 @@ describe ActivityFeed::Feed do
 
         [:feed_between_timestamps, :between].each do |method|
           feed = ActivityFeed.send(method, 'david', Time.local(2012, 6, 19, 4, 43, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
-          feed.length.should eql(2)
-          feed[0].to_i.should eql(4)
-          feed[1].to_i.should eql(3)
+          expect(feed.length).to eql(2)
+          expect(feed[0].to_i).to eql(4)
+          expect(feed[1].to_i).to eql(3)
         end
       end
     end
@@ -120,37 +120,37 @@ describe ActivityFeed::Feed do
   describe '#total_pages_in_feed and #total_pages' do
     describe 'without aggregation' do
       it 'should return the correct number of pages in the activity feed' do
-        ActivityFeed.total_pages_in_feed('david').should eql(0)
-        ActivityFeed.total_pages('david').should eql(0)
+        expect(ActivityFeed.total_pages_in_feed('david')).to eql(0)
+        expect(ActivityFeed.total_pages('david')).to eql(0)
 
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1)
 
-        ActivityFeed.total_pages_in_feed('david').should eql(2)
-        ActivityFeed.total_pages('david').should eql(2)
+        expect(ActivityFeed.total_pages_in_feed('david')).to eql(2)
+        expect(ActivityFeed.total_pages('david')).to eql(2)
       end
     end
 
     describe 'with aggregation' do
       it 'should return the correct number of pages in the aggregate activity feed' do
-        ActivityFeed.total_pages_in_feed('david', true).should eql(0)
-        ActivityFeed.total_pages('david', true).should eql(0)
+        expect(ActivityFeed.total_pages_in_feed('david', true)).to eql(0)
+        expect(ActivityFeed.total_pages('david', true)).to eql(0)
 
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
 
-        ActivityFeed.total_pages_in_feed('david', true).should eql(2)
-        ActivityFeed.total_pages('david', true).should eql(2)
+        expect(ActivityFeed.total_pages_in_feed('david', true)).to eql(2)
+        expect(ActivityFeed.total_pages('david', true)).to eql(2)
       end
     end
 
     describe 'changing page_size parameter' do
       it 'should return the correct number of pages in the activity feed' do
-        ActivityFeed.total_pages_in_feed('david', false, 4).should eql(0)
-        ActivityFeed.total_pages('david', false, 4).should eql(0)
+        expect(ActivityFeed.total_pages_in_feed('david', false, 4)).to eql(0)
+        expect(ActivityFeed.total_pages('david', false, 4)).to eql(0)
 
         add_items_to_feed('david', 25)
 
-        ActivityFeed.total_pages_in_feed('david', false, 4).should eql(7)
-        ActivityFeed.total_pages('david', false, 4).should eql(7)
+        expect(ActivityFeed.total_pages_in_feed('david', false, 4)).to eql(7)
+        expect(ActivityFeed.total_pages('david', false, 4)).to eql(7)
       end
     end
   end
@@ -159,38 +159,38 @@ describe ActivityFeed::Feed do
     it 'should remove the activity feeds for a given user ID' do
       add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
 
-      ActivityFeed.total_items_in_feed('david').should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
-      ActivityFeed.total_items_in_feed('david', true).should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+      expect(ActivityFeed.total_items_in_feed('david')).to eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+      expect(ActivityFeed.total_items_in_feed('david', true)).to eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
 
       ActivityFeed.remove_feeds('david')
 
-      ActivityFeed.total_items_in_feed('david').should eql(0)
-      ActivityFeed.total_items_in_feed('david', true).should eql(0)
+      expect(ActivityFeed.total_items_in_feed('david')).to eql(0)
+      expect(ActivityFeed.total_items_in_feed('david', true)).to eql(0)
     end
   end
 
   describe '#total_items_in_feed and #total_items' do
     describe 'without aggregation' do
       it 'should return the correct number of items in the activity feed' do
-        ActivityFeed.total_items_in_feed('david').should eql(0)
-        ActivityFeed.total_items('david').should eql(0)
+        expect(ActivityFeed.total_items_in_feed('david')).to eql(0)
+        expect(ActivityFeed.total_items('david')).to eql(0)
 
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1)
 
-        ActivityFeed.total_items_in_feed('david').should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
-        ActivityFeed.total_items('david').should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+        expect(ActivityFeed.total_items_in_feed('david')).to eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+        expect(ActivityFeed.total_items('david')).to eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
       end
     end
 
     describe 'with aggregation' do
       it 'should return the correct number of items in the aggregate activity feed' do
-        ActivityFeed.total_items_in_feed('david', true).should eql(0)
-        ActivityFeed.total_items('david', true).should eql(0)
+        expect(ActivityFeed.total_items_in_feed('david', true)).to eql(0)
+        expect(ActivityFeed.total_items('david', true)).to eql(0)
 
         add_items_to_feed('david', Leaderboard::DEFAULT_PAGE_SIZE + 1, true)
 
-        ActivityFeed.total_items_in_feed('david', true).should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
-        ActivityFeed.total_items('david', true).should eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+        expect(ActivityFeed.total_items_in_feed('david', true)).to eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
+        expect(ActivityFeed.total_items('david', true)).to eql(Leaderboard::DEFAULT_PAGE_SIZE + 1)
       end
     end
   end
@@ -213,9 +213,9 @@ describe ActivityFeed::Feed do
 
           ActivityFeed.send(method, 'david', Time.local(2012, 6, 19, 4, 29, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i)
           feed = ActivityFeed.feed('david', 1)
-          feed.length.should eql(2)
-          feed[0].to_i.should eql(5)
-          feed[1].to_i.should eql(1)
+          expect(feed.length).to eql(2)
+          expect(feed[0].to_i).to eql(5)
+          expect(feed[1].to_i).to eql(1)
         end
       end
     end
@@ -237,9 +237,9 @@ describe ActivityFeed::Feed do
 
           ActivityFeed.send(method, 'david', Time.local(2012, 6, 19, 4, 29, 0).to_i, Time.local(2012, 6, 19, 8, 16, 0).to_i, true)
           feed = ActivityFeed.feed('david', 1, true)
-          feed.length.should eql(2)
-          feed[0].to_i.should eql(5)
-          feed[1].to_i.should eql(1)
+          expect(feed.length).to eql(2)
+          expect(feed[0].to_i).to eql(5)
+          expect(feed[1].to_i).to eql(1)
         end
       end
     end
@@ -250,9 +250,9 @@ describe ActivityFeed::Feed do
       it 'should allow you to trim activity feed items to a given size' do
         add_items_to_feed('david')
 
-        ActivityFeed.total_items('david').should eql(5)
+        expect(ActivityFeed.total_items('david')).to eql(5)
         ActivityFeed.trim_to_size('david', 3)
-        ActivityFeed.total_items('david').should eql(3)
+        expect(ActivityFeed.total_items('david')).to eql(3)
       end
     end
 
@@ -260,9 +260,9 @@ describe ActivityFeed::Feed do
       it 'should allow you to trim activity feed items to a given size' do
         add_items_to_feed('david', 5, true)
 
-        ActivityFeed.total_items('david', true).should eql(5)
+        expect(ActivityFeed.total_items('david', true)).to eql(5)
         ActivityFeed.trim_to_size('david', 3, true)
-        ActivityFeed.total_items('david', true).should eql(3)
+        expect(ActivityFeed.total_items('david', true)).to eql(3)
       end
     end
   end
@@ -275,7 +275,7 @@ describe ActivityFeed::Feed do
         end
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should eql(0)
+        expect(feed.length).to eql(0)
 
         item = ActivityFeed::ActiveRecord::Item.create(
           :user_id => 'david',
@@ -286,8 +286,8 @@ describe ActivityFeed::Feed do
         )
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should eql(1)
-        feed[0].should == item
+        expect(feed.length).to eql(1)
+        expect(feed[0]).to eq(item)
       end
     end
 
@@ -298,7 +298,7 @@ describe ActivityFeed::Feed do
         end
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should eql(0)
+        expect(feed.length).to eql(0)
 
         item = ActivityFeed::Mongoid::Item.create(
           :user_id => 'david',
@@ -310,8 +310,8 @@ describe ActivityFeed::Feed do
         )
 
         feed = ActivityFeed.feed('david', 1)
-        feed.length.should eql(1)
-        feed[0].should == item
+        expect(feed.length).to eql(1)
+        expect(feed[0]).to eq(item)
       end
     end
   end
@@ -322,8 +322,8 @@ describe ActivityFeed::Feed do
 
       ActivityFeed.expire_feed('david', 10)
       ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
-        ttl.should be > 1
-        ttl.should be <= 10
+        expect(ttl).to be > 1
+        expect(ttl).to be <= 10
       end
     end
 
@@ -332,8 +332,8 @@ describe ActivityFeed::Feed do
 
       ActivityFeed.expire_in('david', 10)
       ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
-        ttl.should be > 1
-        ttl.should be <= 10
+        expect(ttl).to be > 1
+        expect(ttl).to be <= 10
       end
     end
 
@@ -342,8 +342,8 @@ describe ActivityFeed::Feed do
 
       ActivityFeed.expire_feed_in('david', 10)
       ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
-        ttl.should be > 1
-        ttl.should be <= 10
+        expect(ttl).to be > 1
+        expect(ttl).to be <= 10
       end
     end
   end
@@ -354,8 +354,8 @@ describe ActivityFeed::Feed do
 
       ActivityFeed.expire_feed_at('david', (Time.now + 10).to_i)
       ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
-        ttl.should be > 1
-        ttl.should be <= 10
+        expect(ttl).to be > 1
+        expect(ttl).to be <= 10
       end
     end
 
@@ -364,8 +364,8 @@ describe ActivityFeed::Feed do
 
       ActivityFeed.expire_at('david', (Time.now + 10).to_i)
       ActivityFeed.redis.ttl(ActivityFeed.feed_key('david')).tap do |ttl|
-        ttl.should be > 1
-        ttl.should be <= 10
+        expect(ttl).to be > 1
+        expect(ttl).to be <= 10
       end
     end
   end

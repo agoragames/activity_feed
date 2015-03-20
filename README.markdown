@@ -334,4 +334,4 @@ ActivityFeed.remove_feeds(user_id)
 
 ## Copyright
 
-Copyright (c) 2011-2014 David Czarnecki. See LICENSE.txt for further details.
+Copyright (c) 2011-2015 David Czarnecki. See LICENSE.txt for further details.

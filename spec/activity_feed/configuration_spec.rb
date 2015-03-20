@@ -4,10 +4,10 @@ describe ActivityFeed::Configuration do
   describe '#configure' do
     it 'should have default attributes' do
       ActivityFeed.configure do |configuration|
-        configuration.namespace.should eql('activity_feed')
-        configuration.aggregate.should be_false
-        configuration.aggregate_key.should eql('aggregate')
-        configuration.page_size.should eql(25)
+        expect(configuration.namespace).to eql('activity_feed')
+        expect(configuration.aggregate).to be_falsey
+        expect(configuration.aggregate_key).to eql('aggregate')
+        expect(configuration.page_size).to eql(25)
       end
     end
   end

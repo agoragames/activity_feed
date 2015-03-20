@@ -16,7 +16,7 @@ ActiveRecord::Schema.define do
     t.string :type
     t.string :title
     t.text :body
-    
+
     t.timestamps
   end
 end
@@ -24,8 +24,9 @@ end
 module ActivityFeed
   module ActiveRecord
     class Item < ::ActiveRecord::Base
-      set_table_name 'activity_feed_items'
-        
+      self.table_name = 'activity_feed_items'
+      self.inheritance_column = nil
+
       after_save :update_activity_feed
 
       private
